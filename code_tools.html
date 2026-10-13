@@ -1,0 +1,1592 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b14">
+<meta name="description" content="Free online code tools to format, validate, encode, decode, minify, and optimize your code.">
+<title>Developer — Coding Tools</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #080b14;
+  --panel: #101626;
+  --card: #111a2c;
+  --card-hover: #17223a;
+  --text: #f5f7ff;
+  --muted: #98a6c3;
+  --accent: #8b5cf6;
+  --accent2: #22d3ee;
+  --border: rgba(148,163,184,.14);
+  --success: #34d399;
+  --danger: #fb7185;
+  --radius: 20px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(ellipse at 12% 0%, rgba(124,58,237,.14), transparent 35%),
+    radial-gradient(ellipse at 90% 15%, rgba(34,211,238,.08), transparent 32%),
+    var(--bg);
+}
+
+button, input, textarea, select { font: inherit; }
+
+button { -webkit-tap-highlight-color: transparent; }
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+.tool:focus-visible {
+  outline: 2px solid var(--accent2);
+  outline-offset: 3px;
+}
+
+a { color: inherit; text-decoration: none; }
+
+.topbar {
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 6%;
+  border-bottom: 1px solid var(--border);
+  background: rgba(8,11,20,.7);
+  backdrop-filter: blur(18px);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: -.5px;
+}
+
+.brand-mark {
+  width: 39px;
+  height: 39px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  font-size: 19px;
+  color: white;
+  background: linear-gradient(135deg, var(--accent), #5b8cff 60%, var(--accent2));
+  box-shadow: 0 5px 24px rgba(139,92,246,.3);
+}
+
+.brand span:last-child { color: #b6c3dc; }
+
+.topbar-note {
+  color: var(--muted);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 12px rgba(52,211,153,.5);
+}
+
+.hero {
+  text-align: center;
+  padding: 76px 20px 36px;
+  max-width: 900px;
+  margin: auto;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 13px;
+  border: 1px solid rgba(139,92,246,.28);
+  border-radius: 30px;
+  background: rgba(139,92,246,.09);
+  color: #c4b5fd;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent2);
+}
+
+.hero h1 {
+  margin: 24px 0 15px;
+  font-size: clamp(36px, 6vw, 65px);
+  line-height: 1.08;
+  letter-spacing: -2.8px;
+  font-weight: 800;
+}
+
+.gradient-text {
+  color: #a78bfa;
+  background: linear-gradient(100deg, #c4b5fd 5%, #8b5cf6 45%, #22d3ee 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero > p {
+  max-width: 610px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.search-wrap {
+  max-width: 570px;
+  margin: 29px auto 0;
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8492af;
+  font-size: 19px;
+  pointer-events: none;
+}
+
+#search {
+  width: 100%;
+  height: 57px;
+  padding: 0 18px 0 49px;
+  color: var(--text);
+  background: rgba(17,26,44,.88);
+  border: 1px solid rgba(148,163,184,.22);
+  border-radius: 15px;
+  outline: none;
+  transition: border .2s, box-shadow .2s;
+}
+
+#search::placeholder { color: #71809d; }
+
+#search:focus {
+  border-color: rgba(139,92,246,.8);
+  box-shadow: 0 0 0 4px rgba(139,92,246,.1);
+}
+
+.stats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #9cabc7;
+  font-size: 12px;
+}
+
+.stat-icon { color: var(--accent2); }
+
+.main {
+  max-width: 1440px;
+  padding: 22px 6% 75px;
+  margin: auto;
+}
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.section-heading h2 {
+  margin: 0 0 7px;
+  font-size: 22px;
+  letter-spacing: -.7px;
+}
+
+.section-heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.result-count {
+  flex-shrink: 0;
+  color: #a5b4cf;
+  font-size: 12px;
+  padding: 8px 11px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(17,26,44,.7);
+}
+
+.filters {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+}
+
+.filter-btn {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 15px;
+  color: #a4b1cb;
+  background: rgba(17,26,44,.6);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.filter-btn:hover {
+  border-color: rgba(139,92,246,.55);
+  color: white;
+}
+
+.filter-btn.active {
+  color: white;
+  border-color: rgba(139,92,246,.55);
+  background: linear-gradient(110deg, rgba(139,92,246,.25), rgba(34,211,238,.09));
+}
+
+.tools {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 17px;
+}
+
+.tool {
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+  padding: 23px 21px;
+  min-height: 196px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: linear-gradient(145deg, rgba(19,29,49,.97), rgba(13,20,35,.97));
+  cursor: pointer;
+  transition: transform .22s, border-color .22s, background .22s, box-shadow .22s;
+}
+
+.tool::after {
+  content: "";
+  position: absolute;
+  right: -38px;
+  top: -42px;
+  width: 115px;
+  height: 115px;
+  border-radius: 50%;
+  background: var(--glow, rgba(139,92,246,.11));
+  filter: blur(27px);
+  opacity: .65;
+  pointer-events: none;
+  transition: opacity .2s;
+}
+
+.tool:hover {
+  transform: translateY(-5px);
+  border-color: rgba(139,92,246,.58);
+  background: linear-gradient(145deg, #18233b, #111a2c);
+  box-shadow: 0 15px 40px rgba(0,0,0,.2);
+}
+
+.tool:hover::after { opacity: 1; }
+
+.tool-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.tool-icon {
+  width: 45px;
+  height: 45px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 14px;
+  font-size: 21px;
+  background: var(--icon-bg, rgba(139,92,246,.13));
+}
+
+.tool-arrow {
+  color: #697b9b;
+  font-size: 18px;
+  transition: transform .2s, color .2s;
+}
+
+.tool:hover .tool-arrow {
+  transform: translate(3px,-3px);
+  color: var(--accent2);
+}
+
+.tool h3 {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 9px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -.3px;
+}
+
+.tool p {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.tool-category {
+  display: inline-block;
+  margin-top: 15px;
+  position: relative;
+  z-index: 1;
+  color: #a5b4cf;
+  font-size: 10px;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.empty-state {
+  display: none;
+  text-align: center;
+  padding: 60px 20px;
+  border: 1px dashed var(--border);
+  border-radius: 20px;
+  color: var(--muted);
+}
+
+.empty-state .empty-icon { font-size: 30px; }
+
+.empty-state h3 {
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 23px 6%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  color: #73829e;
+  font-size: 11px;
+}
+
+.footer strong { color: #b8c4dc; }
+
+/* Modal */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(3,6,14,.8);
+  backdrop-filter: blur(12px);
+}
+
+.modal.open { display: flex; }
+
+.modal-content {
+  position: relative;
+  width: 100%;
+  max-width: 850px;
+  max-height: min(90vh, 900px);
+  overflow-y: auto;
+  border: 1px solid rgba(148,163,184,.2);
+  border-radius: 23px;
+  padding: 29px;
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(139,92,246,.12), transparent 40%),
+    #101626;
+  box-shadow: 0 30px 100px rgba(0,0,0,.55);
+  animation: modalIn .2s ease-out;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(10px) scale(.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 24px;
+}
+
+.modal-heading {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.modal-icon {
+  width: 51px;
+  height: 51px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 15px;
+  background: linear-gradient(135deg, rgba(139,92,246,.24), rgba(34,211,238,.1));
+  border: 1px solid rgba(139,92,246,.25);
+  font-size: 23px;
+}
+
+.modal-header h2 {
+  margin: 0 0 7px;
+  font-size: 21px;
+  letter-spacing: -.6px;
+}
+
+.modal-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.close {
+  display: grid;
+  place-items: center;
+  width: 37px;
+  height: 37px;
+  flex-shrink: 0;
+  border-radius: 11px;
+  color: #9eabc4;
+  background: rgba(148,163,184,.08);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: .2s;
+}
+
+.close:hover {
+  color: white;
+  background: rgba(251,113,133,.15);
+  border-color: rgba(251,113,133,.3);
+}
+
+.field-label {
+  display: block;
+  color: #dbe4f5;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+#textInput {
+  display: block;
+  width: 100%;
+  min-height: 210px;
+  resize: vertical;
+  padding: 17px;
+  color: #dbeafe;
+  background: #090e1a;
+  border: 1px solid rgba(148,163,184,.18);
+  border-radius: 13px;
+  outline: none;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  font-size: 12px;
+  line-height: 1.8;
+  tab-size: 2;
+}
+
+#textInput::placeholder { color: #586984; }
+
+#textInput:focus {
+  border-color: rgba(139,92,246,.65);
+  box-shadow: 0 0 0 3px rgba(139,92,246,.08);
+}
+
+.input-hint {
+  margin: 9px 0 0;
+  color: #71809d;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 17px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 43px;
+  padding: 0 17px;
+  border-radius: 11px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  transition: transform .2s, filter .2s, border-color .2s;
+}
+
+.btn:hover { filter: brightness(1.12); }
+.btn:active { transform: scale(.98); }
+
+.btn-primary {
+  color: white;
+  background: linear-gradient(110deg, #8b5cf6, #6475f5 60%, #4389f7);
+  box-shadow: 0 5px 20px rgba(139,92,246,.18);
+}
+
+.btn-secondary {
+  color: #cbd5e1;
+  background: rgba(148,163,184,.08);
+  border-color: var(--border);
+}
+
+.btn-secondary:hover { border-color: rgba(148,163,184,.35); }
+
+.output-panel {
+  display: none;
+  margin-top: 24px;
+  border: 1px solid rgba(148,163,184,.17);
+  border-radius: 15px;
+  overflow: hidden;
+  background: #090e1a;
+}
+
+.output-panel.visible { display: block; }
+
+.output-header {
+  min-height: 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 15px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(17,26,44,.8);
+}
+
+.output-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.output-status {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--success);
+}
+
+.output-status.error { background: var(--danger); }
+
+.copy-btn {
+  padding: 7px 10px;
+  color: #cbd5e1;
+  background: rgba(148,163,184,.08);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.copy-btn:hover {
+  border-color: rgba(34,211,238,.45);
+  color: white;
+}
+
+#output {
+  margin: 0;
+  padding: 18px;
+  max-height: 350px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: #c7d7f4;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  font-size: 12px;
+  line-height: 1.85;
+}
+
+.modal-footnote {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 19px;
+  color: #71809d;
+  font-size: 11px;
+}
+
+@media (max-width: 1100px) {
+  .tools { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .topbar { padding: 15px 5%; }
+  .topbar-note { display: none; }
+  .hero { padding: 58px 20px 30px; }
+  .hero h1 { letter-spacing: -1.7px; }
+  .main { padding: 22px 5% 55px; }
+  .tools { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .tool { padding: 19px 16px; min-height: 190px; }
+  .tool h3 { font-size: 14px; }
+  .section-heading { align-items: flex-start; }
+  .modal-content { padding: 21px; }
+  .footer { padding: 20px 5%; }
+}
+
+@media (max-width: 460px) {
+  .hero h1 { font-size: 36px; }
+  .hero > p { font-size: 13px; }
+  .stats { gap: 12px 17px; }
+  .tools { grid-template-columns: 1fr; }
+  .tool { min-height: auto; }
+  .tool-top { margin-bottom: 14px; }
+  .tool-category { margin-top: 10px; }
+  .section-heading h2 { font-size: 19px; }
+  .result-count { font-size: 10px; }
+  .filters { gap: 7px; }
+  .filter-btn { padding: 9px 11px; }
+  .modal { padding: 10px; }
+  .modal-content { padding: 17px; max-height: 95vh; }
+  .modal-header h2 { font-size: 18px; }
+  .modal-heading { gap: 10px; }
+  .modal-icon { width: 43px; height: 43px; }
+  .footer { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <a class="brand" href="#" aria-label="Developer Coding Tools home">
+    <span class="brand-mark">&lt;/&gt;</span>
+    <span>Developer <span>Coding Tools</span></span>
+  </a>
+  <div class="topbar-note">
+    <span class="status-dot"></span>
+    Free tools · No API required
+  </div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">
+    <span class="eyebrow-dot"></span>
+    Your everyday coding toolkit
+  </div>
+
+  <h1>Code smarter.<br><span class="gradient-text">Build faster.</span></h1>
+
+  <p>
+    Format, validate, encode, decode, and optimize your code with
+    a collection of handy developer tools — all in one place.
+  </p>
+
+  <div class="search-wrap">
+    <span class="search-icon" aria-hidden="true">⌕</span>
+    <input
+      type="search"
+      id="search"
+      placeholder="Search code tools..."
+      aria-label="Search code tools"
+      autocomplete="off"
+    >
+  </div>
+
+  <div class="stats">
+    <div class="stat"><span class="stat-icon">✦</span> 15 developer tools</div>
+    <div class="stat"><span class="stat-icon">⌘</span> Instant results</div>
+    <div class="stat"><span class="stat-icon">◈</span> Runs in your browser</div>
+  </div>
+</section>
+
+<main class="main">
+  <div class="section-heading">
+    <div>
+      <h2>Explore code tools</h2>
+      <p>Everything you need for your next coding task.</p>
+    </div>
+    <div class="result-count" id="resultCount">15 tools available</div>
+  </div>
+
+  <nav class="filters" aria-label="Filter tools by category">
+    <button class="filter-btn active" data-filter="all" aria-pressed="true">All tools</button>
+    <button class="filter-btn" data-filter="format" aria-pressed="false">Format &amp; Validate</button>
+    <button class="filter-btn" data-filter="encode" aria-pressed="false">Encode &amp; Decode</button>
+    <button class="filter-btn" data-filter="optimize" aria-pressed="false">Optimize</button>
+    <button class="filter-btn" data-filter="utility" aria-pressed="false">Developer Utilities</button>
+  </nav>
+
+  <section class="tools" id="tools" aria-label="Available code tools"></section>
+
+  <div class="empty-state" id="emptyState">
+    <div class="empty-icon">⌕</div>
+    <h3>No tools found</h3>
+    <p>Try a different search term or select another category.</p>
+  </div>
+</main>
+
+<footer class="footer">
+  <div><strong>Developer Coding Tools</strong> · Your coding toolkit.</div>
+  <div>Simple tools. Faster workflows.</div>
+</footer>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-heading">
+        <div class="modal-icon" id="modalIcon">⌘</div>
+        <div>
+          <h2 id="modalTitle">Code Tool</h2>
+          <p id="modalDescription">Paste your input below to get started.</p>
+        </div>
+      </div>
+      <button class="close" id="closeModal" type="button" aria-label="Close dialog">✕</button>
+    </div>
+
+    <label class="field-label" for="textInput" id="inputLabel">Your input</label>
+    <textarea id="textInput" rows="10" spellcheck="false" placeholder="Paste your code here..."></textarea>
+    <p class="input-hint" id="inputHint">Your input is processed locally in your browser.</p>
+
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="runButton" type="button">▶ &nbsp; Run tool</button>
+      <button class="btn btn-secondary" id="clearButton" type="button">Clear input</button>
+    </div>
+
+    <section class="output-panel" id="outputPanel" aria-label="Tool output">
+      <div class="output-header">
+        <div class="output-title">
+          <span class="output-status" id="outputStatus"></span>
+          <span id="outputTitle">Output</span>
+        </div>
+        <button class="copy-btn" id="copyButton" type="button">Copy output</button>
+      </div>
+      <pre id="output" aria-live="polite"></pre>
+    </section>
+
+    <div class="modal-footnote">
+      <span>🔒</span>
+      <span>Your input stays in this browser. No external API is used.</span>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+const toolDefinitions = [
+  {
+    name: "HTML Formatter",
+    icon: "🌐",
+    category: "format",
+    description: "Indent and organize HTML markup for easier reading.",
+    placeholder: '<div class="card"><h1>Hello</h1><p>Welcome!</p></div>',
+    hint: "Formats common HTML markup. Complex templates may need a dedicated parser."
+  },
+  {
+    name: "CSS Formatter",
+    icon: "🎨",
+    category: "format",
+    description: "Clean up CSS rules with consistent indentation.",
+    placeholder: "body{margin:0;color:#fff;background:#080b14}.card{padding:20px;border-radius:12px}",
+    hint: "Formats standard CSS rules and declarations."
+  },
+  {
+    name: "JavaScript Formatter",
+    icon: "⚡",
+    category: "format",
+    description: "Make JavaScript easier to read and maintain.",
+    placeholder: 'function greet(name){console.log("Hello, "+name)}',
+    hint: "Uses a lightweight formatter; it is not a full JavaScript parser."
+  },
+  {
+    name: "JSON Formatter",
+    icon: "📋",
+    category: "format",
+    description: "Pretty-print JSON with readable indentation.",
+    placeholder: '{"name":"Developer Studio","tools":["formatter","validator"],"active":true}',
+    hint: "Requires valid JSON input."
+  },
+  {
+    name: "JSON Validator",
+    icon: "✓",
+    category: "format",
+    description: "Check JSON syntax and identify parsing errors.",
+    placeholder: '{"name":"Example","version":1,"enabled":true}',
+    hint: "Validates JSON syntax, not a custom application schema."
+  },
+  {
+    name: "XML Formatter",
+    icon: "🧩",
+    category: "format",
+    description: "Indent XML documents for improved readability.",
+    placeholder: '<catalog><book id="1"><title>Example</title></book></catalog>',
+    hint: "Checks basic XML structure and formats common XML documents."
+  },
+  {
+    name: "Base64 Encode",
+    icon: "🔐",
+    category: "encode",
+    description: "Encode text into Base64 for data transfer.",
+    placeholder: "Enter the text you want to encode.",
+    hint: "Encodes UTF-8 text. Base64 is an encoding format, not encryption."
+  },
+  {
+    name: "Base64 Decode",
+    icon: "🔓",
+    category: "encode",
+    description: "Decode Base64 text back into readable text.",
+    placeholder: "SGVsbG8sIHdvcmxkIQ==",
+    hint: "Input must be valid Base64 containing UTF-8 text."
+  },
+  {
+    name: "URL Encoder",
+    icon: "🔗",
+    category: "encode",
+    description: "Encode text for safe use as a URL component.",
+    placeholder: "hello world & code=studio",
+    hint: "Encodes a URI component. For a complete URL, encode individual parameter values."
+  },
+  {
+    name: "URL Decoder",
+    icon: "↩",
+    category: "encode",
+    description: "Decode percent-encoded URL components.",
+    placeholder: "hello%20world%20%26%20code%3Dstudio",
+    hint: "Input should be a percent-encoded URI component."
+  },
+  {
+    name: "Regex Tester",
+    icon: "⌁",
+    category: "utility",
+    description: "Test a regular expression against sample text.",
+    placeholder: "Pattern: /hello/gi\n\nText:\nHello world\nhello again",
+    hint: "Enter a pattern on the first line, then a blank line and the test text. Example: /hello/gi"
+  },
+  {
+    name: "Minify HTML",
+    icon: "↘",
+    category: "optimize",
+    description: "Remove unnecessary whitespace between HTML tags.",
+    placeholder: '<div>\n  <h1>Hello</h1>\n  <p>Welcome!</p>\n</div>',
+    hint: "Basic whitespace minification; it does not remove comments or optimize assets."
+  },
+  {
+    name: "Minify CSS",
+    icon: "✂",
+    category: "optimize",
+    description: "Compress CSS whitespace and punctuation.",
+    placeholder: 'body {\n  margin: 0;\n  color: #ffffff;\n}',
+    hint: "Basic CSS minification. Test the result before using it in production."
+  },
+  {
+    name: "Minify JavaScript",
+    icon: "🚀",
+    category: "optimize",
+    description: "Reduce JavaScript whitespace for compact output.",
+    placeholder: 'function greet() {\n  console.log("Hello world");\n}',
+    hint: "Basic whitespace minification, not a full compiler or production bundler."
+  },
+  {
+    name: "Code Snippet Generator",
+    icon: "⌘",
+    category: "utility",
+    description: "Generate a reusable starter snippet for common tasks.",
+    placeholder: "function\n\nAvailable types: function, fetch, async, array, class, event",
+    hint: "Enter a snippet type such as function, fetch, async, array, class, or event."
+  }
+];
+
+const toolsContainer = document.getElementById("tools");
+const searchInput = document.getElementById("search");
+const resultCount = document.getElementById("resultCount");
+const emptyState = document.getElementById("emptyState");
+const modal = document.getElementById("modal");
+const modalTitle = document.getElementById("modalTitle");
+const modalIcon = document.getElementById("modalIcon");
+const modalDescription = document.getElementById("modalDescription");
+const textInput = document.getElementById("textInput");
+const inputLabel = document.getElementById("inputLabel");
+const inputHint = document.getElementById("inputHint");
+const outputPanel = document.getElementById("outputPanel");
+const output = document.getElementById("output");
+const outputTitle = document.getElementById("outputTitle");
+const outputStatus = document.getElementById("outputStatus");
+const copyButton = document.getElementById("copyButton");
+
+let currentTool = null;
+let activeFilter = "all";
+let lastFocusedElement = null;
+let currentOutput = "";
+
+const categoryNames = {
+  format: "Format & Validate",
+  encode: "Encode & Decode",
+  optimize: "Optimize",
+  utility: "Developer Utilities"
+};
+
+const colorSets = [
+  ["rgba(139,92,246,.13)", "rgba(139,92,246,.25)"],
+  ["rgba(34,211,238,.10)", "rgba(34,211,238,.24)"],
+  ["rgba(52,211,153,.10)", "rgba(52,211,153,.22)"],
+  ["rgba(251,146,60,.10)", "rgba(251,146,60,.22)"],
+  ["rgba(244,114,182,.10)", "rgba(244,114,182,.22)"]
+];
+
+function renderTools() {
+  toolsContainer.replaceChildren();
+
+  toolDefinitions.forEach((tool, index) => {
+    const card = document.createElement("article");
+    card.className = "tool";
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", "Open " + tool.name);
+    card.dataset.name = tool.name.toLowerCase();
+    card.dataset.category = tool.category;
+    card.style.setProperty("--glow", colorSets[index % colorSets.length][1]);
+    card.style.setProperty("--icon-bg", colorSets[index % colorSets.length][0]);
+
+    const top = document.createElement("div");
+    top.className = "tool-top";
+
+    const icon = document.createElement("div");
+    icon.className = "tool-icon";
+    icon.textContent = tool.icon;
+
+    const arrow = document.createElement("span");
+    arrow.className = "tool-arrow";
+    arrow.setAttribute("aria-hidden", "true");
+    arrow.textContent = "↗";
+
+    top.append(icon, arrow);
+
+    const title = document.createElement("h3");
+    title.textContent = tool.name;
+
+    const description = document.createElement("p");
+    description.textContent = tool.description;
+
+    const category = document.createElement("span");
+    category.className = "tool-category";
+    category.textContent = categoryNames[tool.category];
+
+    card.append(top, title, description, category);
+    card.addEventListener("click", () => openModal(tool));
+    card.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openModal(tool);
+      }
+    });
+
+    toolsContainer.appendChild(card);
+  });
+
+  filterTools();
+}
+
+function filterTools() {
+  const query = searchInput.value.trim().toLowerCase();
+  let visible = 0;
+
+  document.querySelectorAll(".tool").forEach(card => {
+    const tool = toolDefinitions.find(item =>
+      item.name.toLowerCase() === card.dataset.name
+    );
+
+    const matchesQuery = [
+      tool.name, tool.description, categoryNames[tool.category]
+    ].join(" ").toLowerCase().includes(query);
+
+    const matchesCategory =
+      activeFilter === "all" || tool.category === activeFilter;
+
+    const show = matchesQuery && matchesCategory;
+    card.style.display = show ? "" : "none";
+    if (show) visible++;
+  });
+
+  resultCount.textContent = visible + (visible === 1 ? " tool found" : " tools found");
+  emptyState.style.display = visible === 0 ? "block" : "none";
+  toolsContainer.style.display = visible === 0 ? "none" : "grid";
+}
+
+document.querySelectorAll(".filter-btn").forEach(button => {
+  button.addEventListener("click", () => {
+    activeFilter = button.dataset.filter;
+
+    document.querySelectorAll(".filter-btn").forEach(item => {
+      const active = item === button;
+      item.classList.toggle("active", active);
+      item.setAttribute("aria-pressed", String(active));
+    });
+
+    filterTools();
+  });
+});
+
+searchInput.addEventListener("input", filterTools);
+
+function openModal(tool) {
+  currentTool = tool;
+  lastFocusedElement = document.activeElement;
+
+  modalTitle.textContent = tool.name;
+  modalIcon.textContent = tool.icon;
+  modalDescription.textContent = tool.description;
+  inputLabel.textContent = "Your input";
+  textInput.placeholder = tool.placeholder;
+  textInput.value = "";
+  inputHint.textContent = tool.hint;
+  output.textContent = "";
+  currentOutput = "";
+  outputPanel.classList.remove("visible");
+  outputStatus.classList.remove("error");
+  copyButton.textContent = "Copy output";
+
+  modal.classList.add("open");
+  document.body.style.overflow = "hidden";
+  textInput.focus();
+}
+
+function closeModal() {
+  modal.classList.remove("open");
+  document.body.style.overflow = "";
+
+  if (lastFocusedElement && typeof lastFocusedElement.focus === "function") {
+    lastFocusedElement.focus();
+  }
+}
+
+document.getElementById("closeModal").addEventListener("click", closeModal);
+
+modal.addEventListener("click", event => {
+  if (event.target === modal) closeModal();
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && modal.classList.contains("open")) {
+    closeModal();
+  }
+
+  if (event.key === "Enter" && (event.ctrlKey || event.metaKey) &&
+      modal.classList.contains("open")) {
+    runTool();
+  }
+});
+
+document.getElementById("clearButton").addEventListener("click", () => {
+  textInput.value = "";
+  output.textContent = "";
+  currentOutput = "";
+  outputPanel.classList.remove("visible");
+  textInput.focus();
+});
+
+function showOutput(value, isError = false, title = "Output") {
+  currentOutput = String(value);
+  output.textContent = currentOutput;
+  outputTitle.textContent = title;
+  outputStatus.classList.toggle("error", isError);
+  outputPanel.classList.add("visible");
+  copyButton.textContent = "Copy output";
+}
+
+function formatMarkup(source) {
+  const tokens = source
+    .replace(/>\s*</g, ">\n<")
+    .split("\n")
+    .map(line => line.trim())
+    .filter(Boolean);
+
+  let indent = 0;
+  const result = [];
+
+  for (const token of tokens) {
+    const isClosing = /^<\//.test(token);
+    const isComment = /^<!--/.test(token);
+    const isDeclaration = /^<!/.test(token);
+    const isOpening = /^<[^/!?][^>]*>$/.test(token);
+    const isSelfClosing = /\/>$/.test(token);
+    const isVoid = /^<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)\b/i.test(token);
+
+    if (isClosing) indent = Math.max(0, indent - 1);
+
+    result.push("  ".repeat(indent) + token);
+
+    if (isOpening && !isClosing && !isSelfClosing && !isVoid &&
+        !isComment && !isDeclaration) {
+      indent++;
+    }
+  }
+
+  return result.join("\n");
+}
+
+function formatCSS(source) {
+  let css = source
+    .replace(/\/\*[\s\S]*?\*\//g, match => "\n" + match + "\n")
+    .replace(/\s*\{\s*/g, " {\n  ")
+    .replace(/\s*;\s*/g, ";\n  ")
+    .replace(/;\s*}/g, ";\n}")
+    .replace(/\s*}\s*/g, "\n}\n\n")
+    .replace(/,\s*/g, ", ")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
+  return css;
+}
+
+function formatJavaScript(source) {
+  // Lightweight formatting only; use a dedicated parser for complex syntax.
+  let result = "";
+  let indent = 0;
+  let quote = "";
+  let escaped = false;
+  let lineComment = false;
+  let blockComment = false;
+  let parens = 0;
+  let brackets = 0;
+
+  const pad = () => "  ".repeat(Math.max(0, indent));
+
+  for (let i = 0; i < source.length; i++) {
+    const ch = source[i];
+    const next = source[i + 1];
+
+    if (lineComment) {
+      result += ch;
+      if (ch === "\n") lineComment = false;
+      continue;
+    }
+
+    if (blockComment) {
+      result += ch;
+      if (ch === "*" && next === "/") {
+        result += "/";
+        i++;
+        blockComment = false;
+      }
+      continue;
+    }
+
+    if (quote) {
+      result += ch;
+      if (escaped) escaped = false;
+      else if (ch === "\\") escaped = true;
+      else if (ch === quote) quote = "";
+      continue;
+    }
+
+    if ((ch === "'" || ch === '"' || ch === "`")) {
+      quote = ch;
+      result += ch;
+      continue;
+    }
+
+    if (ch === "/" && next === "/") {
+      result += "//";
+      i++;
+      lineComment = true;
+      continue;
+    }
+
+    if (ch === "/" && next === "*") {
+      result += "/*";
+      i++;
+      blockComment = true;
+      continue;
+    }
+
+    if (ch === "(") parens++;
+    if (ch === ")") parens = Math.max(0, parens - 1);
+    if (ch === "[") brackets++;
+    if (ch === "]") brackets = Math.max(0, brackets - 1);
+
+    if (ch === "{") {
+      result = result.trimEnd() + " {\n";
+      indent++;
+      result += pad();
+    } else if (ch === "}") {
+      result = result.trimEnd();
+      if (result && !result.endsWith("\n")) result += "\n";
+      indent = Math.max(0, indent - 1);
+      result += pad() + "}";
+      if (next && !";,.)]}".includes(next)) result += "\n" + pad();
+    } else if (ch === ";" && parens === 0) {
+      result += ";\n" + pad();
+    } else if (ch === "," && parens === 0 && brackets === 0) {
+      result += ",\n" + pad();
+    } else if (ch === "\n" || ch === "\r" || ch === "\t" || ch === " ") {
+      if (result && !result.endsWith(" ") && !result.endsWith("\n")) result += " ";
+    } else {
+      result += ch;
+    }
+  }
+
+  return result
+    .split("\n")
+    .map(line => line.trimEnd())
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+function formatXML(source) {
+  if (!source.trim()) throw new Error("Please enter XML to format.");
+
+  // This lightweight formatter checks balanced tags, but is not a full XML parser.
+  const tokens = source.replace(/>\s*</g, ">\n<").split("\n").map(s => s.trim()).filter(Boolean);
+  const stack = [];
+  const result = [];
+
+  for (const token of tokens) {
+    if (/^<\?/.test(token) || /^<!--/.test(token) || /^<!/.test(token)) {
+      result.push("  ".repeat(stack.length) + token);
+      continue;
+    }
+
+    if (/^<\//.test(token)) {
+      const match = token.match(/^<\/\s*([^\s>]+)\s*>$/);
+      if (!match) throw new Error("Malformed closing tag: " + token);
+
+      const name = match[1];
+      const openName = stack.pop();
+      if (openName !== name) {
+        throw new Error("Mismatched closing tag: " + name);
+      }
+
+      result.push("  ".repeat(stack.length) + token);
+      continue;
+    }
+
+    const match = token.match(/^<([^\s/>]+)(?:\s[^>]*)?>$/);
+    if (!match) {
+      result.push("  ".repeat(stack.length) + token);
+      continue;
+    }
+
+    result.push("  ".repeat(stack.length) + token);
+
+    if (!/\/>$/.test(token) && !/^<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)\b/i.test(token)) {
+      stack.push(match[1]);
+    }
+  }
+
+  if (stack.length) throw new Error("Unclosed XML tag: " + stack[stack.length - 1]);
+  return result.join("\n");
+}
+
+function minifyHTML(source) {
+  return source
+    .replace(/<!--[\s\S]*?-->/g, "")
+    .replace(/>\s+</g, "><")
+    .replace(/[ \t]{2,}/g, " ")
+    .trim();
+}
+
+function minifyCSS(source) {
+  return source
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/\s*([{}:;,])\s*/g, "$1")
+    .replace(/;}/g, "}")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function minifyJavaScript(source) {
+  // Conservative whitespace reduction. This intentionally avoids aggressive
+  // token removal because a safe JS minifier requires a full parser.
+  return source
+    .replace(/^\s*\/\/.*$/gm, "")
+    .replace(/[ \t]+/g, " ")
+    .replace(/\s*([=+\-*\/<>!&|?:;,{}()[\]])\s*/g, "$1")
+    .replace(/\s*\n\s*/g, "\n")
+    .trim();
+}
+
+function utf8ToBase64(value) {
+  const bytes = new TextEncoder().encode(value);
+  let binary = "";
+  for (let i = 0; i < bytes.length; i += 0x8000) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  }
+  return btoa(binary);
+}
+
+function base64ToUtf8(value) {
+  const clean = value.replace(/\s/g, "");
+  const binary = atob(clean);
+  const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+  return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+}
+
+function testRegex(value) {
+  const separator = value.indexOf("\n\n");
+  if (separator < 0) {
+    throw new Error("Enter a regex pattern on the first line, a blank line, then your test text.");
+  }
+
+  const patternLine = value.slice(0, separator).trim();
+  const sample = value.slice(separator + 2);
+  const match = patternLine.match(/^\/([\s\S]*)\/([dgimsuvy]*)$/);
+
+  if (!match) {
+    throw new Error("Use this format: /pattern/flags, followed by a blank line and test text.");
+  }
+
+  let regex;
+  try {
+    regex = new RegExp(match[1], match[2].replace(/[gy]/g, ""));
+  } catch (error) {
+    throw new Error("Invalid regular expression: " + error.message);
+  }
+
+  const matches = [...sample.matchAll(new RegExp(regex.source, regex.flags + (regex.flags.includes("g") ? "" : "g")))];
+  if (!matches.length) return "No matches found.";
+
+  return matches.map((item, index) => {
+    const position = item.index;
+    return `Match ${index + 1}: ${JSON.stringify(item[0])}\nPosition: ${position}\nLength: ${item[0].length}`;
+  }).join("\n\n");
+}
+
+function generateSnippet(value) {
+  const type = value.trim().toLowerCase().split(/\s+/)[0];
+
+  const snippets = {
+    function: `function exampleFunction(value) {
+  // Add your logic here
+  return value;
+}
+
+console.log(exampleFunction("Hello world"));`,
+    fetch: `async function fetchData(url) {
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(\`HTTP error: \${response.status}\`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Request failed:", error);
+    throw error;
+  }
+}`,
+    async: `async function runTask() {
+  try {
+    const result = await Promise.resolve("Task complete");
+    console.log(result);
+    return result;
+  } catch (error) {
+    console.error("Task failed:", error);
+    throw error;
+  }
+}
+
+runTask();`,
+    array: `const items = ["apple", "banana", "orange"];
+
+const filteredItems = items.filter(item => item.length > 5);
+const mappedItems = filteredItems.map(item => item.toUpperCase());
+
+console.log(mappedItems);`,
+    class: `class Example {
+  constructor(name) {
+    this.name = name;
+  }
+
+  greet() {
+    return \`Hello, \${this.name}!\`;
+  }
+}
+
+const instance = new Example("World");
+console.log(instance.greet());`,
+    event: `const button = document.querySelector("#myButton");
+
+if (button) {
+  button.addEventListener("click", event => {
+    console.log("Button clicked!", event);
+  });
+}`
+  };
+
+  if (!type) {
+    return "Choose a snippet type:\nfunction\nfetch\nasync\narray\nclass\nevent";
+  }
+
+  if (!snippets[type]) {
+    return "Unknown snippet type: " + type +
+      "\n\nAvailable types: function, fetch, async, array, class, event";
+  }
+
+  return snippets[type];
+}
+
+function runTool() {
+  if (!currentTool) return;
+
+  const input = textInput.value;
+  const name = currentTool.name;
+
+  try {
+    if (!input.trim() && name !== "Code Snippet Generator") {
+      throw new Error("Please enter some input first.");
+    }
+
+    let result;
+
+    switch (name) {
+      case "HTML Formatter":
+        result = formatMarkup(input);
+        break;
+      case "CSS Formatter":
+        result = formatCSS(input);
+        break;
+      case "JavaScript Formatter":
+        result = formatJavaScript(input);
+        break;
+      case "JSON Formatter":
+        result = JSON.stringify(JSON.parse(input), null, 2);
+        break;
+      case "JSON Validator":
+        JSON.parse(input);
+        result = "✓ Valid JSON\n\nYour JSON syntax is valid.";
+        break;
+      case "XML Formatter":
+        result = formatXML(input);
+        break;
+      case "Base64 Encode":
+        result = utf8ToBase64(input);
+        break;
+      case "Base64 Decode":
+        result = base64ToUtf8(input);
+        break;
+      case "URL Encoder":
+        result = encodeURIComponent(input);
+        break;
+      case "URL Decoder":
+        result = decodeURIComponent(input);
+        break;
+      case "Regex Tester":
+        result = testRegex(input);
+        break;
+      case "Minify HTML":
+        result = minifyHTML(input);
+        break;
+      case "Minify CSS":
+        result = minifyCSS(input);
+        break;
+      case "Minify JavaScript":
+        result = minifyJavaScript(input);
+        break;
+      case "Code Snippet Generator":
+        result = generateSnippet(input);
+        break;
+      default:
+        throw new Error("This tool is not available.");
+    }
+
+    showOutput(result, false, "Result");
+  } catch (error) {
+    showOutput("Error: " + error.message, true, "Something needs attention");
+  }
+}
+
+document.getElementById("runButton").addEventListener("click", runTool);
+
+async function copyText(value) {
+  if (!value) return;
+
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(value);
+    } else {
+      const temp = document.createElement("textarea");
+      temp.value = value;
+      temp.style.position = "fixed";
+      temp.style.opacity = "0";
+      document.body.appendChild(temp);
+      temp.select();
+      const copied = document.execCommand("copy");
+      temp.remove();
+      if (!copied) throw new Error("Copy was blocked by the browser.");
+    }
+
+    copyButton.textContent = "✓ Copied!";
+    setTimeout(() => {
+      copyButton.textContent = "Copy output";
+    }, 1600);
+  } catch {
+    copyButton.textContent = "Select and copy";
+    const range = document.createRange();
+    range.selectNodeContents(output);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+}
+
+copyButton.addEventListener("click", () => copyText(currentOutput));
+
+renderTools();
+</script>
+
+</body>
+</html>

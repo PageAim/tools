@@ -1,0 +1,1071 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b14">
+<title>Calculator Tools — Smart Calculators</title>
+<meta name="description" content="Free, easy-to-use calculators for finance, health, dates, percentages, and everyday decisions.">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg: #080b14;
+  --panel: #101626;
+  --card: #111a2b;
+  --card-hover: #172239;
+  --text: #f4f7ff;
+  --muted: #98a6bf;
+  --accent: #9b7bff;
+  --accent2: #45d8e8;
+  --border: rgba(160,175,210,.13);
+  --danger: #ff7b91;
+  --success: #65e6b0;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    radial-gradient(ellipse at 12% 0%, rgba(105,72,220,.16), transparent 35%),
+    radial-gradient(ellipse at 90% 12%, rgba(36,177,208,.09), transparent 30%),
+    var(--bg);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button, input, select { font: inherit; }
+button { -webkit-tap-highlight-color: transparent; }
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px clamp(20px, 5vw, 76px);
+  border-bottom: 1px solid var(--border);
+  background: rgba(8,11,20,.72);
+  backdrop-filter: blur(18px);
+  gap: 20px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -.7px;
+}
+
+.brand-mark {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent), #6556df);
+  box-shadow: 0 5px 24px rgba(130,96,255,.25);
+  font-size: 20px;
+}
+
+.brand span { color: var(--accent); }
+
+.top-label {
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.hero {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 76px 24px 42px;
+  text-align: center;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 13px;
+  color: #c7baff;
+  border: 1px solid rgba(155,123,255,.27);
+  border-radius: 100px;
+  background: rgba(155,123,255,.09);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.eyebrow-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent2);
+  box-shadow: 0 0 12px var(--accent2);
+}
+
+h1 {
+  margin: 22px 0 14px;
+  font-size: clamp(38px, 6vw, 66px);
+  line-height: 1.08;
+  letter-spacing: -3px;
+  font-weight: 800;
+}
+
+.gradient-text {
+  background: linear-gradient(100deg, #b5a0ff 10%, #8e8aff 50%, #54dce9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero > p {
+  max-width: 570px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.search-wrap {
+  max-width: 540px;
+  position: relative;
+  margin: 29px auto 0;
+}
+
+.search-icon {
+  position: absolute;
+  left: 17px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8997b3;
+  font-size: 19px;
+  pointer-events: none;
+}
+
+#search {
+  width: 100%;
+  height: 56px;
+  padding: 0 18px 0 48px;
+  color: var(--text);
+  background: rgba(17,26,43,.85);
+  border: 1px solid rgba(160,175,210,.2);
+  border-radius: 15px;
+  outline: none;
+  transition: .2s ease;
+  box-shadow: 0 10px 35px rgba(0,0,0,.12);
+}
+
+#search::placeholder { color: #7887a2; }
+
+#search:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(155,123,255,.1);
+}
+
+.stats {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 23px;
+}
+
+.stat {
+  color: #aebbd1;
+  font-size: 12px;
+  padding: 9px 13px;
+  border: 1px solid var(--border);
+  background: rgba(17,26,43,.48);
+  border-radius: 9px;
+}
+
+.stat strong { color: #f1f4ff; }
+
+.main {
+  width: min(1320px, 100%);
+  margin: 0 auto;
+  padding: 24px clamp(18px, 4vw, 55px) 76px;
+}
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 15px;
+  margin: 8px 0 22px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: 21px;
+  letter-spacing: -.6px;
+}
+
+.section-heading p {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+#resultCount {
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.tools {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 17px;
+}
+
+.tool {
+  --glow: rgba(155,123,255,.11);
+  position: relative;
+  min-height: 190px;
+  padding: 22px;
+  overflow: hidden;
+  text-align: left;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  background:
+    radial-gradient(circle at 100% 0%, var(--glow), transparent 52%),
+    linear-gradient(145deg, rgba(18,27,45,.97), rgba(13,19,32,.98));
+  cursor: pointer;
+  transition: transform .22s ease, border-color .22s ease, background .22s ease, box-shadow .22s ease;
+}
+
+.tool:hover {
+  transform: translateY(-5px);
+  border-color: rgba(155,123,255,.55);
+  background-color: var(--card-hover);
+  box-shadow: 0 15px 40px rgba(0,0,0,.22), 0 0 25px rgba(155,123,255,.07);
+}
+
+.tool:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent2);
+  outline-offset: 3px;
+}
+
+.tool-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 19px;
+}
+
+.tool-icon {
+  display: grid;
+  place-items: center;
+  width: 45px;
+  height: 45px;
+  border: 1px solid rgba(180,170,255,.15);
+  border-radius: 13px;
+  background: rgba(155,123,255,.12);
+  font-size: 22px;
+}
+
+.tool-arrow {
+  color: #8291ad;
+  font-size: 19px;
+  transition: .2s;
+}
+
+.tool:hover .tool-arrow {
+  color: var(--accent2);
+  transform: translate(2px,-2px);
+}
+
+.tool h3 {
+  margin: 0 0 9px;
+  font-size: 15px;
+  line-height: 1.45;
+  font-weight: 700;
+  letter-spacing: -.25px;
+}
+
+.tool p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.category {
+  display: inline-block;
+  margin-top: 16px;
+  color: #bcaeff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .9px;
+  text-transform: uppercase;
+}
+
+.empty-state {
+  display: none;
+  padding: 55px 20px;
+  text-align: center;
+  color: var(--muted);
+  border: 1px dashed var(--border);
+  border-radius: 17px;
+}
+
+.empty-state strong {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+/* Calculator modal */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(3,5,12,.78);
+  backdrop-filter: blur(12px);
+}
+
+.modal.open { display: flex; }
+
+.modal-content {
+  position: relative;
+  width: min(100%, 510px);
+  max-height: min(88vh, 780px);
+  overflow-y: auto;
+  padding: 30px;
+  border: 1px solid rgba(160,175,210,.2);
+  border-radius: 22px;
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(130,93,255,.14), transparent 42%),
+    #101626;
+  box-shadow: 0 28px 100px rgba(0,0,0,.55);
+  animation: appear .2s ease;
+}
+
+@keyframes appear {
+  from { opacity: 0; transform: translateY(9px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 8px;
+}
+
+.modal-kicker {
+  color: var(--accent2);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+#modalTitle {
+  margin: 9px 0 0;
+  font-size: 24px;
+  line-height: 1.3;
+  letter-spacing: -.8px;
+}
+
+.close {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  color: var(--muted);
+  background: rgba(255,255,255,.03);
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.close:hover { color: white; background: rgba(255,255,255,.08); }
+
+.modal-description {
+  margin: 0 0 23px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+#toolUI {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+.field label {
+  color: #c5cee0;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.field input, .field select {
+  width: 100%;
+  min-width: 0;
+  height: 48px;
+  padding: 0 13px;
+  color: var(--text);
+  background: #0b1120;
+  border: 1px solid rgba(160,175,210,.18);
+  border-radius: 11px;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.field input:focus, .field select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(155,123,255,.1);
+}
+
+.field input::placeholder { color: #66748e; }
+.field select { color-scheme: dark; }
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 12px;
+}
+
+.primary-btn {
+  width: 100%;
+  min-height: 49px;
+  margin-top: 5px;
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(100deg, #8565f4, #6756df);
+  box-shadow: 0 8px 24px rgba(110,84,225,.2);
+  cursor: pointer;
+  transition: .2s;
+}
+
+.primary-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.result-box {
+  display: none;
+  margin-top: 20px;
+  padding: 18px;
+  border: 1px solid rgba(69,216,232,.2);
+  border-radius: 14px;
+  background: rgba(69,216,232,.055);
+  text-align: left;
+}
+
+.result-box.visible { display: block; }
+
+.result-label {
+  color: var(--accent2);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+#result {
+  margin-top: 9px;
+  color: #f4f7ff;
+  font-size: 25px;
+  line-height: 1.4;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+#resultDetail {
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.result-error #result { color: var(--danger); }
+
+.modal-foot {
+  margin-top: 18px;
+  color: #75839e;
+  font-size: 10px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+footer {
+  padding: 24px;
+  text-align: center;
+  color: #71809b;
+  font-size: 11px;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 1050px) {
+  .tools { grid-template-columns: repeat(3, minmax(0,1fr)); }
+}
+
+@media (max-width: 700px) {
+  .topbar { padding: 16px 20px; }
+  .top-label { display: none; }
+  .hero { padding-top: 54px; }
+  h1 { letter-spacing: -1.8px; }
+  .tools { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+  .tool { padding: 17px; min-height: 183px; }
+  .tool-icon { width: 40px; height: 40px; }
+  .section-heading { align-items: flex-start; }
+  .modal-content { padding: 23px 19px; }
+}
+
+@media (max-width: 390px) {
+  .tools { grid-template-columns: 1fr; }
+  .tool { min-height: auto; }
+  .tool-top { margin-bottom: 12px; }
+  .field-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">∑</div>
+    Calculator<span>Tools</span>
+  </div>
+  <div class="top-label">Your everyday calculation toolkit</div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow"><span class="eyebrow-dot"></span> Smart tools. Simple answers.</div>
+  <h1>Calculate smarter.<br><span class="gradient-text">Live better.</span></h1>
+  <p>From everyday math to financial planning, find the right calculator to make your next decision with confidence.</p>
+
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input type="search" id="search" placeholder="Search calculators..." autocomplete="off" aria-label="Search calculators">
+  </div>
+
+  <div class="stats">
+    <div class="stat"><strong>12</strong> practical calculators</div>
+    <div class="stat"><strong>Free</strong> to use</div>
+    <div class="stat"><strong>Instant</strong> results</div>
+  </div>
+</section>
+
+<main class="main">
+  <div class="section-heading">
+    <div>
+      <h2>Explore calculators</h2>
+      <p>Choose a tool to get started.</p>
+    </div>
+    <span id="resultCount">12 tools</span>
+  </div>
+
+  <section class="tools" id="tools" aria-label="Available calculators"></section>
+
+  <div class="empty-state" id="emptyState">
+    <strong>No calculators found</strong>
+    Try a different search term.
+  </div>
+</main>
+
+<footer>Calculator Tools · Simple tools for everyday decisions</footer>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-content">
+    <div class="modal-top">
+      <div>
+        <div class="modal-kicker">Calculator workspace</div>
+        <h2 id="modalTitle">Calculator</h2>
+      </div>
+      <button class="close" id="closeBtn" type="button" aria-label="Close calculator">✕</button>
+    </div>
+
+    <p class="modal-description" id="modalDescription">Enter your values below to calculate a result.</p>
+    <form id="calculatorForm">
+      <div id="toolUI"></div>
+      <button class="primary-btn" type="submit">Calculate result <span aria-hidden="true">↗</span></button>
+    </form>
+
+    <div class="result-box" id="resultBox" aria-live="polite">
+      <div class="result-label">Your result</div>
+      <div id="result"></div>
+      <div id="resultDetail"></div>
+    </div>
+
+    <div class="modal-foot">Results are estimates for informational purposes. Verify important financial or health decisions independently.</div>
+  </div>
+</div>
+
+<script>
+const calcTools = [
+  {name:"Basic Calculator", icon:"➗", category:"Everyday Math", desc:"Perform quick arithmetic calculations."},
+  {name:"Percentage Calculator", icon:"％", category:"Everyday Math", desc:"Find percentages and percentage values."},
+  {name:"BMI Calculator", icon:"⚖️", category:"Health", desc:"Calculate body mass index from height and weight."},
+  {name:"Loan Calculator", icon:"💳", category:"Finance", desc:"Estimate monthly payments on a personal loan."},
+  {name:"Mortgage Calculator", icon:"🏡", category:"Finance", desc:"Estimate your monthly home loan payment."},
+  {name:"Compound Interest Calculator", icon:"📈", category:"Finance", desc:"See how savings can grow with compound interest."},
+  {name:"ROI Calculator", icon:"💹", category:"Finance", desc:"Measure return on investment as a percentage."},
+  {name:"Profit Margin Calculator", icon:"🧾", category:"Business", desc:"Calculate profit and profit margin from sales."},
+  {name:"Tip Calculator", icon:"🍽️", category:"Everyday Math", desc:"Calculate a tip and split the bill between people."},
+  {name:"Age Calculator", icon:"🎂", category:"Date & Time", desc:"Calculate your age from your date of birth."},
+  {name:"Date Calculator", icon:"📅", category:"Date & Time", desc:"Find the number of days between two dates."},
+  {name:"Fuel Cost Calculator", icon:"⛽", category:"Everyday Math", desc:"Estimate trip fuel costs using distance and fuel price."}
+];
+
+const toolsEl = document.getElementById("tools");
+const modal = document.getElementById("modal");
+const toolUI = document.getElementById("toolUI");
+const calculatorForm = document.getElementById("calculatorForm");
+const resultBox = document.getElementById("resultBox");
+const resultEl = document.getElementById("result");
+const resultDetail = document.getElementById("resultDetail");
+const modalTitle = document.getElementById("modalTitle");
+const modalDescription = document.getElementById("modalDescription");
+
+let currentTool = "";
+let lastFocusedElement = null;
+
+function renderCards(list) {
+  toolsEl.innerHTML = "";
+
+  list.forEach((tool, index) => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "tool";
+    card.style.setProperty("--glow", index % 3 === 1
+      ? "rgba(69,216,232,.10)"
+      : index % 3 === 2
+        ? "rgba(255,177,111,.08)"
+        : "rgba(155,123,255,.11)");
+
+    card.innerHTML = `
+      <div class="tool-top">
+        <div class="tool-icon" aria-hidden="true">${tool.icon}</div>
+        <span class="tool-arrow" aria-hidden="true">↗</span>
+      </div>
+      <h3>${tool.name}</h3>
+      <p>${tool.desc}</p>
+      <span class="category">${tool.category}</span>
+    `;
+
+    card.addEventListener("click", () => openModal(tool.name));
+    toolsEl.appendChild(card);
+  });
+
+  document.getElementById("resultCount").textContent =
+    `${list.length} ${list.length === 1 ? "tool" : "tools"}`;
+  document.getElementById("emptyState").style.display =
+    list.length ? "none" : "block";
+}
+
+function field(id, label, placeholder, type = "number", extra = "") {
+  return `
+    <div class="field">
+      <label for="${id}">${label}</label>
+      <input id="${id}" name="${id}" type="${type}"
+        placeholder="${placeholder}"
+        ${type === "number" ? 'step="any"' : ""}
+        ${extra}>
+    </div>`;
+}
+
+function selectField(id, label, options) {
+  return `
+    <div class="field">
+      <label for="${id}">${label}</label>
+      <select id="${id}" name="${id}">
+        ${options.map(o => `<option value="${o.value}">${o.label}</option>`).join("")}
+      </select>
+    </div>`;
+}
+
+function renderUI() {
+  toolUI.innerHTML = "";
+
+  switch (currentTool) {
+    case "Basic Calculator":
+      toolUI.innerHTML = `
+        <div class="field-grid">
+          ${field("a", "First number", "Enter a number")}
+          ${field("b", "Second number", "Enter a number")}
+        </div>
+        ${selectField("op", "Operation", [
+          {value:"+", label:"Addition (+)"},
+          {value:"-", label:"Subtraction (−)"},
+          {value:"*", label:"Multiplication (×)"},
+          {value:"/", label:"Division (÷)"}
+        ])}`;
+      break;
+
+    case "Percentage Calculator":
+      toolUI.innerHTML = `
+        ${field("a", "Value", "Enter the total value")}
+        ${field("b", "Percentage (%)", "Enter percentage")}`;
+      break;
+
+    case "BMI Calculator":
+      toolUI.innerHTML = `
+        ${field("w", "Weight (kg)", "e.g. 70")}
+        ${field("h", "Height (meters)", "e.g. 1.75")}`;
+      break;
+
+    case "Loan Calculator":
+    case "Mortgage Calculator":
+      toolUI.innerHTML = `
+        ${field("p", "Loan amount ($)", "e.g. 25000")}
+        <div class="field-grid">
+          ${field("r", "Annual interest rate (%)", "e.g. 6.5")}
+          ${field("y", "Loan term (years)", "e.g. 5")}
+        </div>`;
+      break;
+
+    case "Compound Interest Calculator":
+      toolUI.innerHTML = `
+        ${field("p", "Initial investment ($)", "e.g. 1000")}
+        <div class="field-grid">
+          ${field("r", "Annual interest rate (%)", "e.g. 5")}
+          ${field("y", "Years", "e.g. 10")}
+        </div>
+        ${field("n", "Compounding frequency (per year)", "e.g. 12", "number", 'min="1" step="1" value="12"')}`;
+      break;
+
+    case "ROI Calculator":
+      toolUI.innerHTML = `
+        ${field("g", "Final value / proceeds ($)", "e.g. 1500")}
+        ${field("c", "Initial investment ($)", "e.g. 1000")}`;
+      break;
+
+    case "Profit Margin Calculator":
+      toolUI.innerHTML = `
+        ${field("rev", "Revenue ($)", "e.g. 5000")}
+        ${field("cost", "Total costs ($)", "e.g. 3200")}`;
+      break;
+
+    case "Tip Calculator":
+      toolUI.innerHTML = `
+        ${field("bill", "Bill amount ($)", "e.g. 80")}
+        <div class="field-grid">
+          ${field("tip", "Tip percentage (%)", "e.g. 18")}
+          ${field("people", "People splitting bill", "e.g. 2", "number", 'min="1" step="1" value="1"')}
+        </div>`;
+      break;
+
+    case "Age Calculator":
+      toolUI.innerHTML = field("dob", "Date of birth", "", "date", 'required');
+      break;
+
+    case "Date Calculator":
+      toolUI.innerHTML = `
+        ${field("d1", "Start date", "", "date", 'required')}
+        ${field("d2", "End date", "", "date", 'required')}`;
+      break;
+
+    case "Fuel Cost Calculator":
+      toolUI.innerHTML = `
+        ${field("dist", "Trip distance (miles)", "e.g. 250")}
+        <div class="field-grid">
+          ${field("eff", "Fuel efficiency (MPG)", "e.g. 28")}
+          ${field("price", "Price per gallon ($)", "e.g. 3.50")}
+        </div>`;
+      break;
+  }
+}
+
+function openModal(name) {
+  currentTool = name;
+  lastFocusedElement = document.activeElement;
+  modalTitle.textContent = name;
+  modalDescription.textContent = calcTools.find(t => t.name === name)?.desc || "";
+  resultBox.classList.remove("visible", "result-error");
+  resultEl.textContent = "";
+  resultDetail.textContent = "";
+  renderUI();
+  modal.classList.add("open");
+  document.body.style.overflow = "hidden";
+
+  const firstInput = toolUI.querySelector("input");
+  if (firstInput) firstInput.focus();
+}
+
+function closeModal() {
+  modal.classList.remove("open");
+  document.body.style.overflow = "";
+  if (lastFocusedElement) lastFocusedElement.focus();
+}
+
+document.getElementById("closeBtn").addEventListener("click", closeModal);
+
+modal.addEventListener("click", event => {
+  if (event.target === modal) closeModal();
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && modal.classList.contains("open")) {
+    closeModal();
+  }
+});
+
+function getNumber(id, label) {
+  const el = document.getElementById(id);
+  if (!el || el.value.trim() === "") {
+    throw new Error(`Please enter ${label.toLowerCase()}.`);
+  }
+
+  const value = Number(el.value);
+  if (!Number.isFinite(value)) {
+    throw new Error(`Please enter a valid number for ${label.toLowerCase()}.`);
+  }
+
+  return value;
+}
+
+function requirePositive(value, label, allowZero = false) {
+  if (allowZero ? value < 0 : value <= 0) {
+    throw new Error(`${label} must be ${allowZero ? "zero or greater" : "greater than zero"}.`);
+  }
+  return value;
+}
+
+function money(value) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD"
+  }).format(value);
+}
+
+function showResult(value, detail = "", isError = false) {
+  resultEl.textContent = value;
+  resultDetail.textContent = detail;
+  resultBox.classList.toggle("result-error", isError);
+  resultBox.classList.add("visible");
+}
+
+function calculate() {
+  let value;
+  let detail = "";
+
+  switch (currentTool) {
+    case "Basic Calculator": {
+      const a = getNumber("a", "First number");
+      const b = getNumber("b", "Second number");
+      const op = document.getElementById("op").value;
+      if (op === "/" && b === 0) throw new Error("Cannot divide by zero.");
+
+      const answer = {
+        "+": () => a + b,
+        "-": () => a - b,
+        "*": () => a * b,
+        "/": () => a / b
+      }[op]();
+
+      value = Number(answer.toPrecision(12)).toLocaleString("en-US", {
+        maximumFractionDigits: 10
+      });
+      break;
+    }
+
+    case "Percentage Calculator": {
+      const amount = getNumber("a", "Value");
+      const percent = getNumber("b", "Percentage");
+      value = (amount * percent / 100).toLocaleString("en-US", {
+        maximumFractionDigits: 4
+      });
+      detail = `${percent}% of ${amount.toLocaleString("en-US")} is ${value}.`;
+      break;
+    }
+
+    case "BMI Calculator": {
+      const weight = requirePositive(getNumber("w", "Weight"), "Weight");
+      const height = requirePositive(getNumber("h", "Height"), "Height");
+      const bmi = weight / (height * height);
+      value = bmi.toFixed(1);
+      let category = "Obesity range";
+      if (bmi < 18.5) category = "Underweight range";
+      else if (bmi < 25) category = "Healthy weight range";
+      else if (bmi < 30) category = "Overweight range";
+      detail = `${category}. BMI is a screening measure, not a diagnosis.`;
+      break;
+    }
+
+    case "Loan Calculator":
+    case "Mortgage Calculator": {
+      const principal = requirePositive(getNumber("p", "Loan amount"), "Loan amount");
+      const annualRate = requirePositive(getNumber("r", "Interest rate"), "Interest rate", true);
+      const years = requirePositive(getNumber("y", "Loan term"), "Loan term");
+      if (years > 100) throw new Error("Please enter a loan term of 100 years or less.");
+
+      const months = years * 12;
+      const monthlyRate = annualRate / 100 / 12;
+      const payment = monthlyRate === 0
+        ? principal / months
+        : principal * monthlyRate / (1 - Math.pow(1 + monthlyRate, -months));
+
+      value = money(payment);
+      detail = `Estimated monthly principal and interest. Total payments: ${money(payment * months)}. Total interest: ${money(payment * months - principal)}. Taxes, insurance, and fees are not included.`;
+      break;
+    }
+
+    case "Compound Interest Calculator": {
+      const principal = requirePositive(getNumber("p", "Initial investment"), "Initial investment", true);
+      const rate = requirePositive(getNumber("r", "Interest rate"), "Interest rate", true);
+      const years = requirePositive(getNumber("y", "Years"), "Years", true);
+      const frequency = requirePositive(getNumber("n", "Compounding frequency"), "Compounding frequency");
+      if (!Number.isInteger(frequency) || frequency > 365) {
+        throw new Error("Compounding frequency must be a whole number from 1 to 365.");
+      }
+      if (years > 1000) throw new Error("Please enter 1,000 years or less.");
+
+      const total = principal * Math.pow(1 + (rate / 100) / frequency, frequency * years);
+      value = money(total);
+      detail = `Interest earned: ${money(total - principal)}. Assumes a constant annual rate and no additional contributions.`;
+      break;
+    }
+
+    case "ROI Calculator": {
+      const gain = getNumber("g", "Final value");
+      const cost = requirePositive(getNumber("c", "Initial investment"), "Initial investment");
+      const roi = ((gain - cost) / cost) * 100;
+      value = `${roi.toFixed(2)}%`;
+      detail = `Net profit or loss: ${money(gain - cost)}.`;
+      break;
+    }
+
+    case "Profit Margin Calculator": {
+      const revenue = requirePositive(getNumber("rev", "Revenue"), "Revenue");
+      const cost = requirePositive(getNumber("cost", "Total costs"), "Total costs", true);
+      const profit = revenue - cost;
+      const margin = (profit / revenue) * 100;
+      value = `${margin.toFixed(2)}%`;
+      detail = `Profit/loss: ${money(profit)} · Revenue: ${money(revenue)} · Costs: ${money(cost)}.`;
+      break;
+    }
+
+    case "Tip Calculator": {
+      const bill = requirePositive(getNumber("bill", "Bill amount"), "Bill amount", true);
+      const percent = requirePositive(getNumber("tip", "Tip percentage"), "Tip percentage", true);
+      const people = requirePositive(getNumber("people", "Number of people"), "Number of people");
+      if (!Number.isInteger(people)) throw new Error("Number of people must be a whole number.");
+
+      const tipAmount = bill * percent / 100;
+      const total = bill + tipAmount;
+      value = money(total / people) + " per person";
+      detail = `Tip: ${money(tipAmount)} · Total bill: ${money(total)} · Before tip: ${money(bill)}.`;
+      break;
+    }
+
+    case "Age Calculator": {
+      const input = document.getElementById("dob").value;
+      if (!input) throw new Error("Please choose your date of birth.");
+
+      const dob = new Date(input + "T00:00:00");
+      const today = new Date();
+      today.setHours(0,0,0,0);
+
+      if (Number.isNaN(dob.getTime())) throw new Error("Please enter a valid date.");
+      if (dob > today) throw new Error("Date of birth cannot be in the future.");
+
+      let years = today.getFullYear() - dob.getFullYear();
+      let months = today.getMonth() - dob.getMonth();
+      let days = today.getDate() - dob.getDate();
+
+      if (days < 0) {
+        months--;
+        const previousMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+        days += previousMonth.getDate();
+      }
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      value = `${years} years`;
+      detail = `${months} months and ${days} days.`;
+      break;
+    }
+
+    case "Date Calculator": {
+      const startValue = document.getElementById("d1").value;
+      const endValue = document.getElementById("d2").value;
+      if (!startValue || !endValue) throw new Error("Please select both dates.");
+
+      const start = new Date(startValue + "T00:00:00Z");
+      const end = new Date(endValue + "T00:00:00Z");
+      const days = Math.round(Math.abs(end - start) / 86400000);
+      value = `${days.toLocaleString("en-US")} days`;
+      detail = `Elapsed time between the selected dates. The earlier date can be either field.`;
+      break;
+    }
+
+    case "Fuel Cost Calculator": {
+      const distance = requirePositive(getNumber("dist", "Distance"), "Distance", true);
+      const mpg = requirePositive(getNumber("eff", "Fuel efficiency"), "Fuel efficiency");
+      const price = requirePositive(getNumber("price", "Fuel price"), "Fuel price", true);
+
+      const gallons = distance / mpg;
+      const cost = gallons * price;
+      value = money(cost);
+      detail = `Estimated fuel needed: ${gallons.toFixed(2)} gallons for ${distance.toLocaleString("en-US")} miles.`;
+      break;
+    }
+
+    default:
+      throw new Error("This calculator is not available.");
+  }
+
+  showResult(value, detail);
+}
+
+calculatorForm.addEventListener("submit", event => {
+  event.preventDefault();
+
+  try {
+    calculate();
+  } catch (error) {
+    showResult("Check your inputs", error.message || "Please review the values and try again.", true);
+  }
+});
+
+document.getElementById("search").addEventListener("input", event => {
+  const query = event.target.value.toLowerCase().trim();
+  const filtered = calcTools.filter(tool =>
+    `${tool.name} ${tool.desc} ${tool.category}`.toLowerCase().includes(query)
+  );
+  renderCards(filtered);
+});
+
+renderCards(calcTools);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1448 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b14">
+<title>Converter Tools — Smart Converters</title>
+<meta name="description" content="Convert files, data, images, and measurement units with easy online converter tools.">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.9.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg:#080b14;
+  --panel:#101626;
+  --card:#111a2b;
+  --card-hover:#172239;
+  --text:#f4f7ff;
+  --muted:#98a6bf;
+  --accent:#9b7bff;
+  --accent2:#45d8e8;
+  --border:rgba(160,175,210,.13);
+  --danger:#ff7b91;
+  --success:#65e6b0;
+}
+
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  background:
+    radial-gradient(ellipse at 12% 0%,rgba(105,72,220,.16),transparent 35%),
+    radial-gradient(ellipse at 90% 12%,rgba(36,177,208,.09),transparent 30%),
+    var(--bg);
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+button,input,select,textarea { font:inherit; }
+button { -webkit-tap-highlight-color:transparent; }
+
+.topbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px clamp(20px,5vw,76px);
+  border-bottom:1px solid var(--border);
+  background:rgba(8,11,20,.72);
+  backdrop-filter:blur(18px);
+  gap:20px;
+}
+
+.brand {
+  display:flex;
+  align-items:center;
+  gap:11px;
+  font-size:19px;
+  font-weight:800;
+  letter-spacing:-.7px;
+}
+
+.brand-mark {
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--accent),#6556df);
+  box-shadow:0 5px 24px rgba(130,96,255,.25);
+  font-size:20px;
+}
+
+.brand span { color:var(--accent); }
+
+.top-label {
+  color:var(--muted);
+  font-size:12px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+
+.hero {
+  max-width:900px;
+  margin:0 auto;
+  padding:76px 24px 42px;
+  text-align:center;
+}
+
+.eyebrow {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 13px;
+  color:#c7baff;
+  border:1px solid rgba(155,123,255,.27);
+  border-radius:100px;
+  background:rgba(155,123,255,.09);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:1.4px;
+  text-transform:uppercase;
+}
+
+.eyebrow-dot {
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--accent2);
+  box-shadow:0 0 12px var(--accent2);
+}
+
+h1 {
+  margin:22px 0 14px;
+  font-size:clamp(38px,6vw,66px);
+  line-height:1.08;
+  letter-spacing:-3px;
+  font-weight:800;
+}
+
+.gradient-text {
+  background:linear-gradient(100deg,#b5a0ff 10%,#8e8aff 50%,#54dce9 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.hero > p {
+  max-width:570px;
+  margin:0 auto;
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.8;
+}
+
+.search-wrap {
+  max-width:540px;
+  position:relative;
+  margin:29px auto 0;
+}
+
+.search-icon {
+  position:absolute;
+  left:17px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#8997b3;
+  font-size:19px;
+  pointer-events:none;
+}
+
+#search {
+  width:100%;
+  height:56px;
+  padding:0 18px 0 48px;
+  color:var(--text);
+  background:rgba(17,26,43,.85);
+  border:1px solid rgba(160,175,210,.2);
+  border-radius:15px;
+  outline:none;
+  transition:.2s ease;
+  box-shadow:0 10px 35px rgba(0,0,0,.12);
+}
+
+#search::placeholder { color:#7887a2; }
+
+#search:focus {
+  border-color:var(--accent);
+  box-shadow:0 0 0 4px rgba(155,123,255,.1);
+}
+
+.stats {
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:23px;
+}
+
+.stat {
+  color:#aebbd1;
+  font-size:12px;
+  padding:9px 13px;
+  border:1px solid var(--border);
+  background:rgba(17,26,43,.48);
+  border-radius:9px;
+}
+
+.stat strong { color:#f1f4ff; }
+
+.main {
+  width:min(1320px,100%);
+  margin:0 auto;
+  padding:24px clamp(18px,4vw,55px) 76px;
+}
+
+.section-heading {
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  gap:15px;
+  margin:8px 0 22px;
+}
+
+.section-heading h2 {
+  margin:0;
+  font-size:21px;
+  letter-spacing:-.6px;
+}
+
+.section-heading p {
+  margin:7px 0 0;
+  color:var(--muted);
+  font-size:13px;
+}
+
+#resultCount {
+  color:var(--muted);
+  font-size:12px;
+  white-space:nowrap;
+}
+
+.tools {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:17px;
+}
+
+.tool {
+  --glow:rgba(155,123,255,.11);
+  position:relative;
+  min-height:190px;
+  padding:22px;
+  overflow:hidden;
+  text-align:left;
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:17px;
+  background:
+    radial-gradient(circle at 100% 0%,var(--glow),transparent 52%),
+    linear-gradient(145deg,rgba(18,27,45,.97),rgba(13,19,32,.98));
+  cursor:pointer;
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+
+.tool:hover {
+  transform:translateY(-5px);
+  border-color:rgba(155,123,255,.55);
+  background-color:var(--card-hover);
+  box-shadow:0 15px 40px rgba(0,0,0,.22),0 0 25px rgba(155,123,255,.07);
+}
+
+.tool:focus-visible,button:focus-visible {
+  outline:2px solid var(--accent2);
+  outline-offset:3px;
+}
+
+.tool-top {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:19px;
+}
+
+.tool-icon {
+  display:grid;
+  place-items:center;
+  width:45px;
+  height:45px;
+  border:1px solid rgba(180,170,255,.15);
+  border-radius:13px;
+  background:rgba(155,123,255,.12);
+  font-size:22px;
+}
+
+.tool-arrow {
+  color:#8291ad;
+  font-size:19px;
+  transition:.2s;
+}
+
+.tool:hover .tool-arrow {
+  color:var(--accent2);
+  transform:translate(2px,-2px);
+}
+
+.tool h3 {
+  margin:0 0 9px;
+  font-size:15px;
+  line-height:1.45;
+  font-weight:700;
+  letter-spacing:-.25px;
+}
+
+.tool p {
+  margin:0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.65;
+}
+
+.category {
+  display:inline-block;
+  margin-top:16px;
+  color:#bcaeff;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.9px;
+  text-transform:uppercase;
+}
+
+.empty-state {
+  display:none;
+  padding:55px 20px;
+  text-align:center;
+  color:var(--muted);
+  border:1px dashed var(--border);
+  border-radius:17px;
+}
+
+.empty-state strong {
+  display:block;
+  margin-bottom:8px;
+  color:var(--text);
+}
+
+/* Modal */
+.modal {
+  position:fixed;
+  inset:0;
+  z-index:20;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:rgba(3,5,12,.78);
+  backdrop-filter:blur(12px);
+}
+
+.modal.open { display:flex; }
+
+.modal-content {
+  position:relative;
+  width:min(100%,650px);
+  max-height:min(90vh,850px);
+  overflow-y:auto;
+  padding:30px;
+  border:1px solid rgba(160,175,210,.2);
+  border-radius:22px;
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(130,93,255,.14),transparent 42%),
+    #101626;
+  box-shadow:0 28px 100px rgba(0,0,0,.55);
+  animation:appear .2s ease;
+}
+
+@keyframes appear {
+  from { opacity:0;transform:translateY(9px) scale(.985); }
+  to { opacity:1;transform:translateY(0) scale(1); }
+}
+
+.modal-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:18px;
+  margin-bottom:8px;
+}
+
+.modal-kicker {
+  color:var(--accent2);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+
+#modalTitle {
+  margin:9px 0 0;
+  font-size:24px;
+  line-height:1.3;
+  letter-spacing:-.8px;
+}
+
+.close {
+  flex:0 0 auto;
+  width:36px;
+  height:36px;
+  display:grid;
+  place-items:center;
+  border:1px solid var(--border);
+  border-radius:11px;
+  color:var(--muted);
+  background:rgba(255,255,255,.03);
+  cursor:pointer;
+  font-size:17px;
+}
+
+.close:hover { color:white;background:rgba(255,255,255,.08); }
+
+.modal-description {
+  margin:0 0 23px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.7;
+}
+
+#toolUI {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:14px;
+}
+
+.field {
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  text-align:left;
+}
+
+.field label {
+  color:#c5cee0;
+  font-size:12px;
+  font-weight:600;
+}
+
+.field input,.field select,.field textarea {
+  width:100%;
+  min-width:0;
+  padding:13px;
+  color:var(--text);
+  background:#0b1120;
+  border:1px solid rgba(160,175,210,.18);
+  border-radius:11px;
+  outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+
+.field input,.field select { min-height:47px; }
+.field textarea { min-height:150px;resize:vertical;line-height:1.65; }
+
+.field input:focus,.field select:focus,.field textarea:focus {
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(155,123,255,.1);
+}
+
+.field input::placeholder,.field textarea::placeholder { color:#66748e; }
+.field select { color-scheme:dark; }
+
+.field-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+
+.file-input {
+  padding:10px !important;
+  font-size:12px;
+}
+
+.helper {
+  margin:0;
+  color:#8290aa;
+  font-size:11px;
+  line-height:1.7;
+}
+
+.primary-btn {
+  width:100%;
+  min-height:49px;
+  margin-top:18px;
+  color:white;
+  font-size:13px;
+  font-weight:700;
+  border:0;
+  border-radius:12px;
+  background:linear-gradient(100deg,#8565f4,#6756df);
+  box-shadow:0 8px 24px rgba(110,84,225,.2);
+  cursor:pointer;
+  transition:.2s;
+}
+
+.primary-btn:hover {
+  filter:brightness(1.1);
+  transform:translateY(-1px);
+}
+
+.secondary-btn {
+  min-height:42px;
+  padding:10px 14px;
+  color:#d9d2ff;
+  border:1px solid rgba(155,123,255,.3);
+  border-radius:10px;
+  background:rgba(155,123,255,.09);
+  cursor:pointer;
+  font-size:12px;
+  font-weight:600;
+}
+
+.secondary-btn:hover { background:rgba(155,123,255,.16); }
+
+#output {
+  display:none;
+  margin-top:20px;
+  padding:17px;
+  color:var(--text);
+  background:rgba(69,216,232,.045);
+  border:1px solid rgba(69,216,232,.18);
+  border-radius:14px;
+  text-align:left;
+}
+
+#output.visible { display:block; }
+
+.output-heading {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:10px;
+}
+
+.output-label {
+  color:var(--accent2);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+}
+
+.output-content {
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  max-height:300px;
+  overflow:auto;
+  color:#e8efff;
+  font-size:13px;
+  line-height:1.75;
+}
+
+.output-content img {
+  display:block;
+  max-width:100%;
+  height:auto;
+  margin:8px auto;
+  border-radius:10px;
+}
+
+.output-content a {
+  color:var(--accent2);
+  overflow-wrap:anywhere;
+}
+
+.output-content table {
+  width:100%;
+  border-collapse:collapse;
+  font-size:12px;
+}
+
+.output-content td,.output-content th {
+  border:1px solid var(--border);
+  padding:8px;
+  text-align:left;
+}
+
+.output-error { border-color:rgba(255,123,145,.35) !important; }
+.output-error .output-label { color:var(--danger); }
+
+.output-actions {
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+  margin-top:13px;
+}
+
+.modal-foot {
+  margin-top:18px;
+  color:#75839e;
+  font-size:10px;
+  line-height:1.7;
+  text-align:center;
+}
+
+footer {
+  padding:24px;
+  text-align:center;
+  color:#71809b;
+  font-size:11px;
+  border-top:1px solid var(--border);
+}
+
+@media(max-width:1050px) {
+  .tools { grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+
+@media(max-width:700px) {
+  .topbar { padding:16px 20px; }
+  .top-label { display:none; }
+  .hero { padding-top:54px; }
+  h1 { letter-spacing:-1.8px; }
+  .tools { grid-template-columns:repeat(2,minmax(0,1fr));gap:12px; }
+  .tool { padding:17px;min-height:183px; }
+  .tool-icon { width:40px;height:40px; }
+  .section-heading { align-items:flex-start; }
+  .modal-content { padding:23px 19px; }
+}
+
+@media(max-width:390px) {
+  .tools { grid-template-columns:1fr; }
+  .tool { min-height:auto; }
+  .tool-top { margin-bottom:12px; }
+  .field-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">⇄</div>
+    Converter<span>Tools</span>
+  </div>
+  <div class="top-label">Your all-in-one conversion toolkit</div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow"><span class="eyebrow-dot"></span> Convert. Simplify. Get things done.</div>
+  <h1>Everything converted.<br><span class="gradient-text">In a few clicks.</span></h1>
+  <p>Convert files, transform data, and switch between measurement units with a collection of simple, practical tools.</p>
+
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input type="search" id="search" placeholder="Search converters..." autocomplete="off" aria-label="Search converters">
+  </div>
+
+  <div class="stats">
+    <div class="stat"><strong>15</strong> conversion tools</div>
+    <div class="stat"><strong>Easy</strong> to use</div>
+    <div class="stat"><strong>Fast</strong> results</div>
+  </div>
+</section>
+
+<main class="main">
+  <div class="section-heading">
+    <div>
+      <h2>Explore converters</h2>
+      <p>Choose a tool to get started.</p>
+    </div>
+    <span id="resultCount">15 tools</span>
+  </div>
+
+  <section class="tools" id="tools" aria-label="Available converters"></section>
+
+  <div class="empty-state" id="emptyState">
+    <strong>No converters found</strong>
+    Try a different search term.
+  </div>
+</main>
+
+<footer>Converter Tools · Simple tools for everyday tasks</footer>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-content">
+    <div class="modal-top">
+      <div>
+        <div class="modal-kicker">Conversion workspace</div>
+        <h2 id="modalTitle">Converter</h2>
+      </div>
+      <button class="close" id="closeBtn" type="button" aria-label="Close converter">✕</button>
+    </div>
+
+    <p class="modal-description" id="modalDescription">Enter your data or upload a file to get started.</p>
+
+    <div id="toolUI"></div>
+    <button class="primary-btn" id="runBtn" type="button">Run converter <span aria-hidden="true">↗</span></button>
+
+    <div id="output" aria-live="polite">
+      <div class="output-heading">
+        <span class="output-label">Conversion result</span>
+        <button type="button" class="secondary-btn" id="copyBtn">Copy result</button>
+      </div>
+      <div class="output-content" id="outputContent"></div>
+      <div class="output-actions" id="outputActions"></div>
+    </div>
+
+    <div class="modal-foot">File processing is performed in your browser when possible. Some document formats require compatible libraries. Currency rates are illustrative unless a live rate source is connected.</div>
+  </div>
+</div>
+
+<script>
+const converters = [
+  {name:"JPG to Word",icon:"🖼️",category:"Files",desc:"Extract text from an image with OCR-ready workflow."},
+  {name:"Word to JPG",icon:"📄",category:"Files",desc:"Convert a Word document into an image."},
+  {name:"PDF to Text",icon:"📑",category:"Files",desc:"Extract selectable text from a PDF document."},
+  {name:"Text to PDF",icon:"📝",category:"Files",desc:"Turn plain text into a downloadable PDF."},
+  {name:"Image to Base64",icon:"🔐",category:"Images & Data",desc:"Encode an image as a Base64 data URL."},
+  {name:"Base64 to Image",icon:"🌄",category:"Images & Data",desc:"Preview an image from a Base64 data URL."},
+  {name:"CSV to JSON",icon:"📊",category:"Data",desc:"Transform spreadsheet-style CSV data into JSON."},
+  {name:"JSON to CSV",icon:"{ }",category:"Data",desc:"Convert a JSON array into CSV format."},
+  {name:"Units Converter",icon:"📐",category:"Units",desc:"Convert between common units of measurement."},
+  {name:"Currency Converter",icon:"💱",category:"Finance",desc:"Convert an amount between selected currencies."},
+  {name:"Temperature Converter",icon:"🌡️",category:"Units",desc:"Convert Celsius, Fahrenheit, and Kelvin."},
+  {name:"Length Converter",icon:"📏",category:"Units",desc:"Convert meters, feet, inches, and more."},
+  {name:"Weight Converter",icon:"⚖️",category:"Units",desc:"Convert kilograms, pounds, grams, and ounces."},
+  {name:"Speed Converter",icon:"🚀",category:"Units",desc:"Convert km/h, mph, m/s, and knots."},
+  {name:"Time Converter",icon:"⏱️",category:"Units",desc:"Convert seconds, minutes, hours, and days."}
+];
+
+const toolsEl = document.getElementById("tools");
+const modal = document.getElementById("modal");
+const toolUI = document.getElementById("toolUI");
+const output = document.getElementById("output");
+const outputContent = document.getElementById("outputContent");
+const outputActions = document.getElementById("outputActions");
+const modalTitle = document.getElementById("modalTitle");
+const modalDescription = document.getElementById("modalDescription");
+const runBtn = document.getElementById("runBtn");
+
+let currentTool = "";
+let lastFocusedElement = null;
+let lastOutputText = "";
+let downloadPayload = null;
+
+function renderCards(list) {
+  toolsEl.innerHTML = "";
+
+  list.forEach((tool,index) => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "tool";
+
+    const glow = index % 3 === 1
+      ? "rgba(69,216,232,.10)"
+      : index % 3 === 2
+        ? "rgba(255,177,111,.08)"
+        : "rgba(155,123,255,.11)";
+
+    card.style.setProperty("--glow",glow);
+    card.innerHTML = `
+      <div class="tool-top">
+        <div class="tool-icon" aria-hidden="true">${tool.icon}</div>
+        <span class="tool-arrow" aria-hidden="true">↗</span>
+      </div>
+      <h3>${tool.name}</h3>
+      <p>${tool.desc}</p>
+      <span class="category">${tool.category}</span>
+    `;
+    card.addEventListener("click",() => openModal(tool.name));
+    toolsEl.appendChild(card);
+  });
+
+  document.getElementById("resultCount").textContent =
+    `${list.length} ${list.length === 1 ? "tool" : "tools"}`;
+  document.getElementById("emptyState").style.display =
+    list.length ? "none" : "block";
+}
+
+function field(id,label,placeholder,type="text",value="",accept="") {
+  if (type === "file") {
+    return `
+      <div class="field">
+        <label for="${id}">${label}</label>
+        <input class="file-input" id="${id}" type="file" ${accept ? `accept="${accept}"` : ""}>
+      </div>`;
+  }
+
+  return `
+    <div class="field">
+      <label for="${id}">${label}</label>
+      <input id="${id}" type="${type}" placeholder="${placeholder}"
+        value="${value}" ${type === "number" ? 'step="any"' : ""}>
+    </div>`;
+}
+
+function textArea(id,label,placeholder,value="") {
+  return `
+    <div class="field">
+      <label for="${id}">${label}</label>
+      <textarea id="${id}" placeholder="${placeholder}">${value}</textarea>
+    </div>`;
+}
+
+function selectField(id,label,options,selected="") {
+  return `
+    <div class="field">
+      <label for="${id}">${label}</label>
+      <select id="${id}">
+        ${options.map(o => `<option value="${o.value}" ${o.value===selected?"selected":""}>${o.label}</option>`).join("")}
+      </select>
+    </div>`;
+}
+
+const unitOptions = {
+  length: [
+    {value:"m",label:"Meters (m)",factor:1},
+    {value:"km",label:"Kilometers (km)",factor:1000},
+    {value:"cm",label:"Centimeters (cm)",factor:.01},
+    {value:"mm",label:"Millimeters (mm)",factor:.001},
+    {value:"mi",label:"Miles (mi)",factor:1609.344},
+    {value:"yd",label:"Yards (yd)",factor:.9144},
+    {value:"ft",label:"Feet (ft)",factor:.3048},
+    {value:"in",label:"Inches (in)",factor:.0254}
+  ],
+  weight: [
+    {value:"kg",label:"Kilograms (kg)",factor:1},
+    {value:"g",label:"Grams (g)",factor:.001},
+    {value:"mg",label:"Milligrams (mg)",factor:.000001},
+    {value:"lb",label:"Pounds (lb)",factor:.45359237},
+    {value:"oz",label:"Ounces (oz)",factor:.028349523125},
+    {value:"st",label:"Stone (st)",factor:6.35029318}
+  ],
+  speed: [
+    {value:"kmh",label:"Kilometers/hour (km/h)",factor:1/3.6},
+    {value:"mph",label:"Miles/hour (mph)",factor:.44704},
+    {value:"ms",label:"Meters/second (m/s)",factor:1},
+    {value:"knot",label:"Knots (kn)",factor:.514444}
+  ],
+  time: [
+    {value:"sec",label:"Seconds",factor:1},
+    {value:"min",label:"Minutes",factor:60},
+    {value:"hr",label:"Hours",factor:3600},
+    {value:"day",label:"Days",factor:86400},
+    {value:"week",label:"Weeks",factor:604800}
+  ]
+};
+
+function unitUI(kind) {
+  const options = unitOptions[kind];
+  return `
+    ${field("unitValue","Value to convert","Enter a number","number")}
+    <div class="field-grid">
+      ${selectField("unitFrom","From",options.map(o=>({value:o.value,label:o.label})),options[0].value)}
+      ${selectField("unitTo","To",options.map(o=>({value:o.value,label:o.label})),options[1].value)}
+    </div>`;
+}
+
+function renderUI() {
+  toolUI.innerHTML = "";
+  runBtn.textContent = "Run converter ↗";
+
+  switch (currentTool) {
+    case "JPG to Word":
+      toolUI.innerHTML = `
+        ${field("fileInput","Choose an image","", "file","","image/jpeg,image/png,image/webp")}
+        ${textArea("textInput","Recognized text","OCR text will appear here after processing.")}
+        <p class="helper">This page does not include an OCR engine. Uploading an image alone cannot extract its text; use the text area for pasted OCR results or connect an OCR service to enable automatic recognition.</p>`;
+      runBtn.textContent = "Create Word document ↗";
+      break;
+
+    case "Word to JPG":
+      toolUI.innerHTML = `
+        ${field("fileInput","Choose a Word document","", "file","","application/vnd.openxmlformats-officedocument.wordprocessingml.document")}
+        <p class="helper">This tool can preview a document's extracted text, but accurate page-to-image rendering requires a document rendering service or an HTML-based layout.</p>`;
+      runBtn.textContent = "Process document ↗";
+      break;
+
+    case "PDF to Text":
+      toolUI.innerHTML = `
+        ${field("fileInput","Choose a PDF file","", "file","","application/pdf")}
+        <p class="helper">Text extraction works for PDFs that contain selectable text. Scanned PDFs require OCR.</p>`;
+      break;
+
+    case "Text to PDF":
+      toolUI.innerHTML = textArea("textInput","Text to convert","Type or paste your text here...");
+      break;
+
+    case "Image to Base64":
+      toolUI.innerHTML = `
+        ${field("fileInput","Choose an image","", "file","","image/*")}
+        <p class="helper">The result is a data URL that includes the image's MIME type.</p>`;
+      break;
+
+    case "Base64 to Image":
+      toolUI.innerHTML = textArea("textInput","Base64 data URL","Paste a data:image/...;base64,... URL here.");
+      break;
+
+    case "CSV to JSON":
+      toolUI.innerHTML = `
+        ${textArea("textInput","CSV data","name,age,city\\nAlex,28,Chicago\\nSam,34,Detroit")}
+        <p class="helper">The first row is treated as the column headers. Quoted fields and commas inside quotes are supported.</p>`;
+      break;
+
+    case "JSON to CSV":
+      toolUI.innerHTML = `
+        ${textArea("textInput","JSON array",'[{"name":"Alex","age":28},{"name":"Sam","age":34}]')}
+        <p class="helper">Provide an array of objects. All rows will use the union of their object keys.</p>`;
+      break;
+
+    case "Units Converter":
+      toolUI.innerHTML = `
+        ${selectField("unitKind","Measurement type",[
+          {value:"length",label:"Length"},
+          {value:"weight",label:"Weight"},
+          {value:"speed",label:"Speed"},
+          {value:"time",label:"Time"}
+        ],"length")}
+        <div id="dynamicUnitFields"></div>`;
+      renderUnitFields();
+      document.getElementById("unitKind").addEventListener("change",renderUnitFields);
+      break;
+
+    case "Currency Converter":
+      toolUI.innerHTML = `
+        ${field("currencyAmount","Amount","e.g. 100","number")}
+        <div class="field-grid">
+          ${selectField("currencyFrom","From",[
+            {value:"USD",label:"USD — US Dollar"},
+            {value:"EUR",label:"EUR — Euro"},
+            {value:"GBP",label:"GBP — British Pound"},
+            {value:"CAD",label:"CAD — Canadian Dollar"},
+            {value:"AUD",label:"AUD — Australian Dollar"},
+            {value:"JPY",label:"JPY — Japanese Yen"}
+          ],"USD")}
+          ${selectField("currencyTo","To",[
+            {value:"USD",label:"USD — US Dollar"},
+            {value:"EUR",label:"EUR — Euro"},
+            {value:"GBP",label:"GBP — British Pound"},
+            {value:"CAD",label:"CAD — Canadian Dollar"},
+            {value:"AUD",label:"AUD — Australian Dollar"},
+            {value:"JPY",label:"JPY — Japanese Yen"}
+          ],"EUR")}
+        </div>
+        <p class="helper">Demo rates only. Connect a live exchange-rate API for current market rates.</p>`;
+      break;
+
+    case "Temperature Converter":
+      toolUI.innerHTML = `
+        ${field("unitValue","Temperature value","e.g. 25","number")}
+        <div class="field-grid">
+          ${selectField("tempFrom","From",[
+            {value:"C",label:"Celsius (°C)"},
+            {value:"F",label:"Fahrenheit (°F)"},
+            {value:"K",label:"Kelvin (K)"}
+          ],"C")}
+          ${selectField("tempTo","To",[
+            {value:"C",label:"Celsius (°C)"},
+            {value:"F",label:"Fahrenheit (°F)"},
+            {value:"K",label:"Kelvin (K)"}
+          ],"F")}
+        </div>`;
+      break;
+
+    case "Length Converter":
+      toolUI.innerHTML = unitUI("length");
+      break;
+
+    case "Weight Converter":
+      toolUI.innerHTML = unitUI("weight");
+      break;
+
+    case "Speed Converter":
+      toolUI.innerHTML = unitUI("speed");
+      break;
+
+    case "Time Converter":
+      toolUI.innerHTML = unitUI("time");
+      break;
+  }
+}
+
+function renderUnitFields() {
+  const holder = document.getElementById("dynamicUnitFields");
+  if (!holder) return;
+  holder.innerHTML = unitUI(document.getElementById("unitKind").value);
+}
+
+function openModal(name) {
+  currentTool = name;
+  lastFocusedElement = document.activeElement;
+  modalTitle.textContent = name;
+  modalDescription.textContent =
+    converters.find(c=>c.name===name)?.desc || "Convert your content or data.";
+  output.classList.remove("visible","output-error");
+  outputContent.innerHTML = "";
+  outputActions.innerHTML = "";
+  lastOutputText = "";
+  downloadPayload = null;
+
+  renderUI();
+  modal.classList.add("open");
+  document.body.style.overflow = "hidden";
+
+  const firstInput = toolUI.querySelector("input,textarea,select");
+  if (firstInput) firstInput.focus();
+}
+
+function closeModal() {
+  modal.classList.remove("open");
+  document.body.style.overflow = "";
+  if (lastFocusedElement) lastFocusedElement.focus();
+}
+
+document.getElementById("closeBtn").addEventListener("click",closeModal);
+modal.addEventListener("click",event=>{
+  if (event.target === modal) closeModal();
+});
+document.addEventListener("keydown",event=>{
+  if (event.key === "Escape" && modal.classList.contains("open")) closeModal();
+});
+
+function showOutput(text,options={}) {
+  output.classList.remove("output-error");
+  outputContent.innerHTML = "";
+  outputActions.innerHTML = "";
+  output.classList.add("visible");
+  lastOutputText = text;
+  downloadPayload = options.download || null;
+
+  if (options.image) {
+    const img = document.createElement("img");
+    img.src = options.image;
+    img.alt = "Converted image preview";
+    outputContent.appendChild(img);
+  } else {
+    outputContent.textContent = text;
+  }
+
+  if (options.download) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "secondary-btn";
+    btn.textContent = options.download.label || "Download file";
+    btn.addEventListener("click",downloadResult);
+    outputActions.appendChild(btn);
+  }
+
+  if (options.previewUrl) {
+    const link = document.createElement("a");
+    link.href = options.previewUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "Open image in new tab";
+    outputActions.appendChild(link);
+  }
+}
+
+function showError(message) {
+  output.classList.add("visible","output-error");
+  outputContent.textContent = message;
+  outputActions.innerHTML = "";
+  lastOutputText = "";
+  downloadPayload = null;
+}
+
+document.getElementById("copyBtn").addEventListener("click",async()=>{
+  if (!lastOutputText) return;
+  try {
+    await navigator.clipboard.writeText(lastOutputText);
+    document.getElementById("copyBtn").textContent = "Copied!";
+  } catch {
+    showError("Copying was blocked by the browser. Select the output text and copy it manually.");
+  }
+});
+
+async function getText(id) {
+  const el = document.getElementById(id);
+  return el ? el.value : "";
+}
+
+function getFile() {
+  const input = document.getElementById("fileInput");
+  const file = input?.files?.[0];
+  if (!file) throw new Error("Please select a file first.");
+  return file;
+}
+
+function readFileAsDataURL(file) {
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error("The file could not be read."));
+    reader.readAsDataURL(file);
+  });
+}
+
+function readFileAsArrayBuffer(file) {
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error("The file could not be read."));
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+function downloadResult() {
+  if (!downloadPayload) return;
+
+  const {blob,filename} = downloadPayload;
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+function setDownload(blob,filename,label) {
+  return {download:{blob,filename,label:label || "Download converted file"}};
+}
+
+function csvParse(text) {
+  const rows = [];
+  let row = [];
+  let value = "";
+  let quoted = false;
+
+  for (let i=0;i<text.length;i++) {
+    const ch = text[i];
+
+    if (ch === '"') {
+      if (quoted && text[i+1] === '"') {
+        value += '"';
+        i++;
+      } else {
+        quoted = !quoted;
+      }
+    } else if (ch === "," && !quoted) {
+      row.push(value);
+      value = "";
+    } else if ((ch === "\n" || ch === "\r") && !quoted) {
+      if (ch === "\r" && text[i+1] === "\n") i++;
+      row.push(value);
+      if (row.some(cell=>cell !== "")) rows.push(row);
+      row = [];
+      value = "";
+    } else {
+      value += ch;
+    }
+  }
+
+  if (quoted) throw new Error("Your CSV contains an unclosed quoted field.");
+
+  row.push(value);
+  if (row.some(cell=>cell !== "")) rows.push(row);
+  return rows;
+}
+
+function csvEscape(value) {
+  const s = value == null ? "" : String(value);
+  return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+}
+
+function toCSV(text) {
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    throw new Error("Invalid JSON. Check the brackets, commas, and quotation marks.");
+  }
+
+  if (!Array.isArray(data) || data.some(item=>!item || typeof item !== "object" || Array.isArray(item))) {
+    throw new Error("Please provide a JSON array containing objects.");
+  }
+
+  if (data.length === 0) throw new Error("The JSON array is empty.");
+
+  const headers = [...new Set(data.flatMap(item=>Object.keys(item)))];
+  const rows = [headers.map(csvEscape).join(",")];
+
+  data.forEach(item=>{
+    rows.push(headers.map(header=>csvEscape(
+      item[header] != null && typeof item[header] === "object"
+        ? JSON.stringify(item[header])
+        : item[header]
+    )).join(","));
+  });
+
+  return rows.join("\r\n");
+}
+
+function convertTemperature(value,from,to) {
+  let celsius;
+  if (from === "C") celsius = value;
+  else if (from === "F") celsius = (value-32)*5/9;
+  else celsius = value-273.15;
+
+  if (to === "C") return celsius;
+  if (to === "F") return celsius*9/5+32;
+  return celsius+273.15;
+}
+
+function unitConvert(value,kind,from,to) {
+  const list = unitOptions[kind];
+  const fromUnit = list.find(u=>u.value===from);
+  const toUnit = list.find(u=>u.value===to);
+  return value*fromUnit.factor/toUnit.factor;
+}
+
+function formatNumber(value) {
+  return Number(value.toPrecision(12)).toLocaleString("en-US",{maximumFractionDigits:8});
+}
+
+async function runTool() {
+  output.classList.remove("visible","output-error");
+  outputContent.innerHTML = "";
+  outputActions.innerHTML = "";
+  runBtn.disabled = true;
+  runBtn.textContent = "Processing...";
+
+  try {
+    switch (currentTool) {
+      case "Text to PDF": {
+        const text = await getText("textInput");
+        if (!text.trim()) throw new Error("Enter some text before creating a PDF.");
+        if (!window.jspdf?.jsPDF) throw new Error("The PDF library could not load. Check your internet connection.");
+
+        const {jsPDF} = window.jspdf;
+        const pdf = new jsPDF();
+        const lines = pdf.splitTextToSize(text,180);
+        let y = 15;
+
+        lines.forEach(line=>{
+          if (y > 280) {
+            pdf.addPage();
+            y = 15;
+          }
+          pdf.text(line,15,y);
+          y += 7;
+        });
+
+        showOutput("Your PDF is ready to download.",setDownload(pdf.output("blob"),"converted.pdf"));
+        break;
+      }
+
+      case "Image to Base64": {
+        const file = getFile();
+        if (!file.type.startsWith("image/")) throw new Error("Please choose a valid image file.");
+        const dataURL = await readFileAsDataURL(file);
+        showOutput(dataURL,setDownload(new Blob([dataURL],{type:"text/plain"}),"image-base64.txt"));
+        break;
+      }
+
+      case "Base64 to Image": {
+        const text = (await getText("textInput")).trim();
+        if (!text) throw new Error("Paste an image data URL first.");
+
+        const match = text.match(/^data:(image\/(?:png|jpeg|jpg|gif|webp|bmp|svg\+xml));base64,([a-zA-Z0-9+/=\s]+)$/i);
+        if (!match) throw new Error("Enter a valid Base64 image data URL, such as data:image/png;base64,...");
+
+        const img = new Image();
+        const imageURL = text.replace(/\s/g,"");
+        await new Promise((resolve,reject)=>{
+          img.onload = resolve;
+          img.onerror = ()=>reject(new Error("The Base64 data could not be decoded as an image."));
+          img.src = imageURL;
+        });
+
+        showOutput("Image decoded successfully.",{
+          image:imageURL,
+          previewUrl:imageURL
+        });
+        break;
+      }
+
+      case "CSV to JSON": {
+        const text = await getText("textInput");
+        if (!text.trim()) throw new Error("Paste CSV data first.");
+
+        const rows = csvParse(text);
+        if (rows.length < 2) throw new Error("Include a header row and at least one data row.");
+
+        const headers = rows[0].map((h,i)=>i===0?h.replace(/^\uFEFF/,"").trim():h.trim());
+        if (headers.some(h=>!h)) throw new Error("Column headers cannot be empty.");
+
+        const duplicates = headers.filter((h,i)=>headers.indexOf(h)!==i);
+        if (duplicates.length) throw new Error("Column headers must be unique.");
+
+        const data = rows.slice(1).map((row,index)=>{
+          if (row.length !== headers.length) {
+            throw new Error(`Row ${index+2} has ${row.length} values, but ${headers.length} columns are expected.`);
+          }
+          const obj = {};
+          headers.forEach((header,i)=>obj[header]=row[i]);
+          return obj;
+        });
+
+        const result = JSON.stringify(data,null,2);
+        showOutput(result,setDownload(new Blob([result],{type:"application/json;charset=utf-8"}),"converted.json"));
+        break;
+      }
+
+      case "JSON to CSV": {
+        const text = await getText("textInput");
+        if (!text.trim()) throw new Error("Paste a JSON array first.");
+        const csv = toCSV(text);
+        showOutput(csv,setDownload(new Blob([csv],{type:"text/csv;charset=utf-8"}),"converted.csv"));
+        break;
+      }
+
+      case "Temperature Converter": {
+        const raw = await getText("unitValue");
+        if (raw.trim()==="") throw new Error("Enter a temperature value.");
+        const value = Number(raw);
+        if (!Number.isFinite(value)) throw new Error("Enter a valid number.");
+
+        const from = document.getElementById("tempFrom").value;
+        const to = document.getElementById("tempTo").value;
+        if (from==="K" && value<0) throw new Error("Kelvin cannot be below absolute zero.");
+        const result = convertTemperature(value,from,to);
+        if (result < -273.15-1e-8) throw new Error("The converted temperature is below absolute zero.");
+
+        const symbols = {C:"°C",F:"°F",K:"K"};
+        showOutput(`${formatNumber(value)} ${symbols[from]} = ${formatNumber(result)} ${symbols[to]}`);
+        break;
+      }
+
+      case "Length Converter":
+      case "Weight Converter":
+      case "Speed Converter":
+      case "Time Converter":
+      case "Units Converter": {
+        const raw = await getText("unitValue");
+        if (raw.trim()==="") throw new Error("Enter a value to convert.");
+        const value = Number(raw);
+        if (!Number.isFinite(value)) throw new Error("Enter a valid number.");
+
+        const kind = currentTool === "Units Converter"
+          ? document.getElementById("unitKind").value
+          : currentTool === "Length Converter" ? "length"
+          : currentTool === "Weight Converter" ? "weight"
+          : currentTool === "Speed Converter" ? "speed" : "time";
+
+        const from = document.getElementById("unitFrom").value;
+        const to = document.getElementById("unitTo").value;
+        const result = unitConvert(value,kind,from,to);
+        const labels = Object.fromEntries(unitOptions[kind].map(u=>[u.value,u.label]));
+        showOutput(`${formatNumber(value)} ${labels[from]} = ${formatNumber(result)} ${labels[to]}`);
+        break;
+      }
+
+      case "Currency Converter": {
+        const raw = await getText("currencyAmount");
+        if (raw.trim()==="") throw new Error("Enter an amount to convert.");
+        const amount = Number(raw);
+        if (!Number.isFinite(amount)) throw new Error("Enter a valid amount.");
+
+        const from = document.getElementById("currencyFrom").value;
+        const to = document.getElementById("currencyTo").value;
+
+        // Illustrative fixed rates relative to USD. Not live exchange rates.
+        const usdRates = {USD:1,EUR:.92,GBP:.79,CAD:1.36,AUD:1.52,JPY:150};
+        const converted = amount/usdRates[from]*usdRates[to];
+        const formatter = currency => new Intl.NumberFormat("en-US",{
+          style:"currency",currency,maximumFractionDigits:2
+        }).format(1).replace(/[0-9.,\s]/g,"");
+
+        showOutput(`${formatter(from)}${formatNumber(amount)} ${from} ≈ ${formatter(to)}${formatNumber(converted)} ${to}`,
+          { });
+        outputContent.textContent += "\n\nIllustrative rate only. This is not a live quote and may not reflect current exchange rates or fees.";
+        lastOutputText = outputContent.textContent;
+        break;
+      }
+
+      case "PDF to Text": {
+        const file = getFile();
+        if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
+          throw new Error("Please choose a PDF file.");
+        }
+        if (!window.pdfjsLib) throw new Error("The PDF library could not load. Check your internet connection.");
+
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+          "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+        const buffer = await readFileAsArrayBuffer(file);
+        const pdf = await pdfjsLib.getDocument({data:buffer}).promise;
+        const pages = [];
+
+        for (let i=1;i<=pdf.numPages;i++) {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          pages.push(`--- Page ${i} ---\n` + content.items.map(item=>item.str).join(" "));
+        }
+
+        const result = pages.join("\n\n");
+        if (!result.replace(/--- Page \d+ ---/g,"").trim()) {
+          throw new Error("No selectable text was found. This PDF may contain scanned images and require OCR.");
+        }
+
+        showOutput(result,setDownload(new Blob([result],{type:"text/plain;charset=utf-8"}),"extracted-text.txt"));
+        break;
+      }
+
+      case "Word to JPG": {
+        const file = getFile();
+        if (!file.name.toLowerCase().endsWith(".docx")) {
+          throw new Error("Please upload a .docx file. Legacy .doc files are not supported by this browser tool.");
+        }
+        if (!window.mammoth) throw new Error("The Word document library could not load.");
+
+        const buffer = await readFileAsArrayBuffer(file);
+        const result = await mammoth.extractRawText({arrayBuffer:buffer});
+        if (!result.value.trim()) throw new Error("No text could be extracted from this document.");
+
+        const escaped = result.value.replace(/[&<>"']/g,ch=>({
+          "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+        }[ch]));
+
+        showOutput("Document text extracted. A true Word-to-JPG page renderer is not included in this standalone version.\n\n"+result.value,
+          setDownload(new Blob([result.value],{type:"text/plain;charset=utf-8"}),"word-text.txt"));
+        break;
+      }
+
+      case "JPG to Word": {
+        const file = getFile();
+        if (!file.type.startsWith("image/")) throw new Error("Please choose an image file.");
+        const text = (await getText("textInput")).trim();
+        if (!text) {
+          throw new Error("No OCR text was provided. This standalone version does not include an OCR engine. Add an OCR API or paste text recognized by an OCR tool to create a Word-compatible document.");
+        }
+
+        const blob = new Blob([text],{type:"text/plain;charset=utf-8"});
+        showOutput("Text document created from your supplied OCR text.",setDownload(blob,"image-text.txt","Download extracted text"));
+        break;
+      }
+    }
+  } catch (error) {
+    showError(error.message || "Conversion failed. Please check your input and try again.");
+  } finally {
+    runBtn.disabled = false;
+    runBtn.textContent = "Run converter ↗";
+  }
+}
+
+runBtn.addEventListener("click",runTool);
+
+document.getElementById("search").addEventListener("input",event=>{
+  const query = event.target.value.toLowerCase().trim();
+  renderCards(converters.filter(tool =>
+    `${tool.name} ${tool.desc} ${tool.category}`.toLowerCase().includes(query)
+  ));
+});
+
+renderCards(converters);
+</script>
+
+</body>
+</html>

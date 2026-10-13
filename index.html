@@ -1,0 +1,335 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b14">
+<meta name="description" content="Explore an all-in-one toolkit of online calculators, code utilities, converters, document tools, generators, image tools, text tools, time tools, and design tools.">
+<title>Ai Toolkit | All-in-One Online Tools</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/styles.css">
+
+</head>
+
+<body>
+
+<header class="topbar">
+  <a href="index.html" class="brand" aria-label="Ai Toolkit home">
+    <span class="brand-mark">&lt;/&gt;</span>
+    <span>Ai<span class="brand-muted">Toolkit</span></span>
+  </a>
+
+  <nav class="nav-links" aria-label="Main navigation">
+    <a href="#tools">All tools</a>
+    <a href="#features">Features</a>
+    <a href="#about">About</a>
+    <a href="#tools" class="nav-cta">Explore toolkit ↗</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">
+        <span class="eyebrow-dot"></span>
+        Your all-in-one digital workspace
+      </div>
+
+      <h1>Everything you need.<br><span class="gradient-text">All in one place.</span></h1>
+
+      <p class="hero-description">
+        Work smarter with a growing collection of online utilities.
+        Calculate, convert, create, format, generate, and optimize
+        with tools designed to simplify your everyday digital tasks.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#tools" class="btn btn-primary">Explore all tools <span>↘</span></a>
+        <a href="#features" class="btn btn-secondary">Discover features <span>→</span></a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-icon">✦</span> 9 tool collections</div>
+        <div class="stat"><span class="stat-icon">⌘</span> One simple workspace</div>
+        <div class="stat"><span class="stat-icon">◈</span> Easy access</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="search-section" aria-label="Search tool collections">
+    <div class="search-wrap">
+      <span class="search-icon" aria-hidden="true">⌕</span>
+      <input
+        type="search"
+        id="toolSearch"
+        placeholder="Search calculators, converters, code tools..."
+        autocomplete="off"
+        aria-label="Search tool collections"
+      >
+    </div>
+    <p class="search-hint">Try “calculator”, “PDF”, “image”, “text”, “time” or “design”.</p>
+  </section>
+
+  <section class="section" id="tools">
+    <div class="section-heading">
+      <div>
+        <h2>Explore all tool collections</h2>
+        <p>Choose a category to open its dedicated tools page.</p>
+      </div>
+      <div class="result-count" id="resultCount">9 collections</div>
+    </div>
+
+    <div class="filters" aria-label="Filter tool collections">
+      <button type="button" class="filter-btn active" data-filter="all" aria-pressed="true">All tools</button>
+      <button type="button" class="filter-btn" data-filter="calculations" aria-pressed="false">Calculations</button>
+      <button type="button" class="filter-btn" data-filter="development" aria-pressed="false">Development</button>
+      <button type="button" class="filter-btn" data-filter="files" aria-pressed="false">Files &amp; documents</button>
+      <button type="button" class="filter-btn" data-filter="creative" aria-pressed="false">Creative tools</button>
+      <button type="button" class="filter-btn" data-filter="productivity" aria-pressed="false">Productivity</button>
+    </div>
+
+    <div class="tool-grid" id="toolGrid">
+
+      <a class="tool-card"
+         href="calculator_tools.html"
+         data-category="calculations"
+         data-search="calculator calculators math finance percentage tip discount loan interest calculate numbers">
+        <div class="tool-top">
+          <span class="tool-icon">🧮</span><span class="tool-arrow">↗</span>
+        </div>
+        <h3>Calculator Tools</h3>
+        <p>Handle everyday calculations, percentages, financial estimates, and other number-based tasks.</p>
+        <span class="tool-category">01 · Calculations</span>
+      </a>
+
+      <a class="tool-card"
+         href="code_tools.html"
+         data-category="development"
+         data-search="code developer html css javascript json xml formatter validator encoder decoder minify regex programming">
+        <div class="tool-top">
+          <span class="tool-icon">&lt;/&gt;</span><span class="tool-arrow">↗</span>
+        </div>
+        <h3>Code Tools</h3>
+        <p>Format and validate code, encode text, test patterns, and simplify common development tasks.</p>
+        <span class="tool-category">02 · Development</span>
+      </a>
+
+      <a class="tool-card"
+         href="converter_tools.html"
+         data-category="calculations"
+         data-search="converter converters conversion convert units length weight temperature currency measurement data">
+        <div class="tool-top">
+          <span class="tool-icon">⇄</span><span class="tool-arrow">↗</span>
+        </div>
+        <h3>Converter Tools</h3>
+        <p>Convert values and measurements between units and formats with convenient utilities.</p>
+        <span class="tool-category">03 · Conversions</span>
+      </a>
+
+      <a class="tool-card"
+         href="document_tools.html"
+         data-category="files"
+         data-search="document documents pdf files text file word pages merge split extract organize document tools">
+        <div class="tool-top">
+          <span class="tool-icon">📄</span><span class="tool-arrow">↗</span>
+        </div>
+        <h3>Document Tools</h3>
+        <p>Access handy document and file utilities to support common document workflows.</p>
+        <span class="tool-category">04 · Documents</span>
+      </a>
+
+      <a class="tool-card"
+         href="generator_tools.html"
+         data-category="creative"
+         data-search="generator generators generate random password qr code uuid ideas names content lorem ipsum">
+        <div class="tool-top">
+          <span class="tool-icon">✦</span><span class="tool-arrow">↗</span>
+        </div>
+        <h3>Generator Tools</h3>
+        <p>Generate useful starting points, sample content, and creative outputs for your projects.</p>
+        <span class="tool-category">05 · Generators</span>
+      </a>
+
+      <a class="tool-card"
+         href="image_tools.html"
+         data-category="creative"
+         data-search="image images photo picture graphics resize compress crop convert optimize">
+        <div class="tool-top">
+          <span class="tool-icon">🖼️</span><span class="tool-arrow">↗</span>
+        </div>
+        <h3>Image Tools</h3>
+        <p>Explore image utilities for common picture, graphics, and visual content tasks.</p>
+        <span class="tool-category">06 · Images</span>
+      </a>
+
+      <a class="tool-card"
+         href="text_tools.html"
+         data-category="productivity"
+         data-search="text words writing character counter case converter count words remove spaces reverse text">
+        <div class="tool-top">
+          <span class="tool-icon">Aa</span><span class="tool-arrow">↗</span>
+        </div>
+        <h3>Text Tools</h3>
+        <p>Analyze, transform, and organize text for writing, editing, and everyday tasks.</p>
+        <span class="tool-category">07 · Text &amp; Writing</span>
+      </a>
+
+      <a class="tool-card"
+         href="time_tools.html"
+         data-category="productivity"
+         data-search="time tools clock timer stopwatch countdown date calendar timezone time zone duration">
+        <div class="tool-top">
+          <span class="tool-icon">◷</span><span class="tool-arrow">↗</span>
+        </div>
+        <h3>Time Tools</h3>
+        <p>Work with time, dates, countdowns, and other time-related utilities.</p>
+        <span class="tool-category">08 · Time &amp; Dates</span>
+      </a>
+
+      <a class="tool-card"
+         href="ui_tools.html"
+         data-category="creative"
+         data-search="ui design user interface website web color palette gradient font typography button shadow logo favicon wireframe">
+        <div class="tool-top">
+          <span class="tool-icon">🎨</span><span class="tool-arrow">↗</span>
+        </div>
+        <h3>Design &amp; UI Tools</h3>
+        <p>Explore visual design helpers for colors, gradients, typography, components, and layouts.</p>
+        <span class="tool-category">09 · Design &amp; UI</span>
+      </a>
+
+    </div>
+
+    <div class="empty-state" id="emptyState">
+      <div style="font-size:30px">⌕</div>
+      <h3>No collections found</h3>
+      <p>Try another search term or select a different category.</p>
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="section-heading">
+      <div>
+        <h2>Designed for everyday productivity</h2>
+        <p>One homepage that connects you to the utilities you need.</p>
+      </div>
+    </div>
+
+    <div class="benefit-grid">
+      <article class="benefit">
+        <div class="benefit-icon">⚡</div>
+        <h3>Quick to navigate</h3>
+        <p>Search the tool directory or filter by category to find the collection that fits your task.</p>
+      </article>
+
+      <article class="benefit">
+        <div class="benefit-icon">◈</div>
+        <h3>One central hub</h3>
+        <p>Bring calculations, code, conversions, documents, images, text, and design tools together.</p>
+      </article>
+
+      <article class="benefit">
+        <div class="benefit-icon">🔧</div>
+        <h3>Easy to expand</h3>
+        <p>Add more tool pages over time by creating another card and linking it to its HTML page.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="cta" id="about">
+    <div class="cta-inner">
+      <h2>Find your tool. Get things done.</h2>
+      <p>
+        Your digital workspace starts here. Browse the collections,
+        choose a tool, and move straight into the task at hand.
+      </p>
+      <div class="hero-actions">
+        <a href="#tools" class="btn btn-primary">Browse all collections ↗</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div><strong>Ai Toolkit</strong> · Your everyday digital toolkit.</div>
+  <nav class="footer-links" aria-label="Footer navigation">
+    <a href="index.html">Home</a>
+    <a href="calculator_tools.html">Calculators</a>
+    <a href="code_tools.html">Code</a>
+    <a href="converter_tools.html">Converters</a>
+    <a href="document_tools.html">Documents</a>
+    <a href="generator_tools.html">Generators</a>
+    <a href="image_tools.html">Images</a>
+    <a href="text_tools.html">Text</a>
+    <a href="time_tools.html">Time</a>
+    <a href="ui_tools.html">Design &amp; UI</a>
+  </nav>
+</footer>
+
+<script>
+"use strict";
+
+const searchInput = document.getElementById("toolSearch");
+const cards = Array.from(document.querySelectorAll(".tool-card"));
+const filterButtons = Array.from(document.querySelectorAll(".filter-btn"));
+const resultCount = document.getElementById("resultCount");
+const emptyState = document.getElementById("emptyState");
+const toolGrid = document.getElementById("toolGrid");
+
+let activeFilter = "all";
+
+function filterTools() {
+  const query = searchInput.value.trim().toLowerCase();
+  let visibleCount = 0;
+
+  cards.forEach(card => {
+    const searchableText = [
+      card.dataset.search || "",
+      card.dataset.category || "",
+      card.innerText || ""
+    ].join(" ").toLowerCase();
+
+    const matchesQuery = searchableText.includes(query);
+    const matchesCategory =
+      activeFilter === "all" ||
+      card.dataset.category === activeFilter;
+
+    const visible = matchesQuery && matchesCategory;
+    card.hidden = !visible;
+
+    if (visible) visibleCount++;
+  });
+
+  resultCount.textContent =
+    visibleCount + (visibleCount === 1 ? " collection" : " collections");
+
+  emptyState.style.display = visibleCount === 0 ? "block" : "none";
+  toolGrid.style.display = visibleCount === 0 ? "none" : "grid";
+}
+
+searchInput.addEventListener("input", filterTools);
+
+filterButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    activeFilter = button.dataset.filter;
+
+    filterButtons.forEach(item => {
+      const isActive = item === button;
+      item.classList.toggle("active", isActive);
+      item.setAttribute("aria-pressed", String(isActive));
+    });
+
+    filterTools();
+  });
+});
+
+filterTools();
+</script>
+
+</body>
+</html>

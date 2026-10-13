@@ -1,0 +1,1076 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b14">
+<title>Image Tools — AI Image Tools</title>
+<script src="https://unpkg.com/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#080b14;
+  --panel:#101626;
+  --card:#111a2d;
+  --card-hover:#17233b;
+  --text:#f4f6ff;
+  --muted:#94a3bd;
+  --accent:#8b5cf6;
+  --cyan:#22d3ee;
+  --border:rgba(148,163,184,.13);
+  --gradient:linear-gradient(135deg,#8b5cf6,#22d3ee);
+  --radius:20px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  color:var(--text);
+  background:
+    radial-gradient(ellipse at 15% 0%,rgba(91,33,182,.17),transparent 36%),
+    radial-gradient(ellipse at 90% 15%,rgba(8,145,178,.10),transparent 30%),
+    var(--bg);
+  font-family:Inter,system-ui,sans-serif;
+  min-height:100vh;
+}
+button,input,select,textarea{font:inherit}
+button{color:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible,
+textarea:focus-visible,.tool:focus-visible{
+  outline:2px solid var(--cyan);
+  outline-offset:3px;
+}
+button:disabled{opacity:.45;cursor:not-allowed}
+.topbar{
+  height:76px;padding:0 6%;display:flex;align-items:center;
+  justify-content:space-between;border-bottom:1px solid var(--border);
+  background:rgba(8,11,20,.75);backdrop-filter:blur(18px);
+  position:sticky;top:0;z-index:10;
+}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:-.5px}
+.brand-icon{
+  width:40px;height:40px;border-radius:13px;display:grid;place-items:center;
+  background:var(--gradient);font-size:21px;box-shadow:0 0 25px #8b5cf633;
+}
+.brand-name{font-size:17px}
+.brand-name span{color:#a78bfa}
+.top-label{
+  font-size:11px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);border:1px solid var(--border);padding:9px 13px;border-radius:30px;
+}
+.hero{text-align:center;padding:76px 20px 38px;max-width:850px;margin:auto}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 13px;
+  border:1px solid rgba(139,92,246,.28);border-radius:30px;
+  color:#c4b5fd;background:rgba(139,92,246,.09);
+  font-size:11px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;
+}
+.eyebrow-dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
+h1{
+  margin:23px 0 15px;font-size:clamp(36px,6vw,64px);
+  line-height:1.08;letter-spacing:-2.8px;font-weight:800;
+}
+.gradient-text{
+  background:linear-gradient(100deg,#a78bfa 15%,#67e8f9 90%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero p{max-width:590px;margin:0 auto;color:var(--muted);font-size:15px;line-height:1.8}
+.search-wrap{max-width:570px;margin:30px auto 0;position:relative}
+.search-icon{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:#8795b1;font-size:19px}
+#search{
+  width:100%;height:56px;padding:0 20px 0 49px;
+  background:rgba(17,26,45,.9);border:1px solid var(--border);
+  border-radius:15px;color:var(--text);outline:none;
+  transition:border .2s,box-shadow .2s;
+}
+#search:focus{border-color:#8b5cf6;box-shadow:0 0 0 4px #8b5cf61c}
+.stats{display:flex;justify-content:center;gap:30px;margin-top:24px;flex-wrap:wrap}
+.stat{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:12px}
+.stat strong{color:#e2e8f0;font-weight:600}
+.stat-icon{color:var(--cyan)}
+.workspace{max-width:1300px;margin:auto;padding:28px 5% 80px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:22px}
+.section-title{font-size:19px;font-weight:700;letter-spacing:-.5px}
+.section-subtitle{font-size:12px;color:var(--muted);margin-top:6px}
+.tool-count{font-size:12px;color:var(--muted)}
+.filters{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:25px}
+.filter{
+  border:1px solid var(--border);background:rgba(17,26,45,.7);
+  color:var(--muted);padding:9px 15px;border-radius:30px;
+  cursor:pointer;font-size:12px;font-weight:600;transition:.2s;
+}
+.filter:hover{color:var(--text);border-color:#8b5cf6}
+.filter.active{color:#fff;background:linear-gradient(120deg,#7c3aed,#6d5ce8);border-color:transparent;box-shadow:0 5px 18px #7c3aed30}
+.tools{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:17px}
+.tool{
+  min-width:0;position:relative;overflow:hidden;padding:22px;
+  border:1px solid var(--border);border-radius:var(--radius);
+  background:linear-gradient(145deg,rgba(20,30,51,.96),rgba(13,20,35,.96));
+  cursor:pointer;transition:transform .25s,border-color .25s,box-shadow .25s;
+}
+.tool:before{
+  content:"";position:absolute;top:0;left:15%;right:15%;height:1px;
+  background:linear-gradient(90deg,transparent,#a78bfa,transparent);opacity:0;transition:.25s;
+}
+.tool:hover{
+  transform:translateY(-5px);border-color:rgba(139,92,246,.55);
+  box-shadow:0 18px 40px #0003,0 0 28px #8b5cf60b;background:var(--card-hover);
+}
+.tool:hover:before{opacity:1}
+.tool-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.tool-icon{
+  width:46px;height:46px;border-radius:14px;display:grid;place-items:center;
+  background:linear-gradient(140deg,rgba(139,92,246,.19),rgba(34,211,238,.09));
+  border:1px solid rgba(167,139,250,.15);font-size:22px;
+}
+.tool-arrow{color:#60708e;font-size:18px;transition:.2s}
+.tool:hover .tool-arrow{color:#c4b5fd;transform:translate(2px,-2px)}
+.tool h3{font-size:14px;line-height:1.5;margin:19px 0 8px;font-weight:700}
+.tool p{font-size:12px;line-height:1.7;color:var(--muted);margin:0;min-height:40px}
+.tool-footer{margin-top:17px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tag{
+  font-size:10px;color:#a5b4fc;background:#818cf81a;
+  border:1px solid #818cf826;border-radius:6px;padding:5px 7px;
+}
+.tool-link{font-size:11px;color:#c4b5fd;font-weight:600}
+.empty-state{display:none;text-align:center;padding:60px 20px;color:var(--muted)}
+.empty-state strong{display:block;color:var(--text);font-size:17px;margin-bottom:8px}
+footer{border-top:1px solid var(--border);padding:25px;text-align:center;color:#64748b;font-size:11px}
+
+/* Modal and editor */
+.modal{
+  position:fixed;inset:0;z-index:30;display:none;align-items:center;
+  justify-content:center;padding:18px;background:rgba(3,6,15,.82);
+  backdrop-filter:blur(12px);
+}
+.modal.open{display:flex}
+.modal-content{
+  width:min(100%,950px);max-height:92vh;overflow:auto;
+  border:1px solid rgba(148,163,184,.19);border-radius:24px;
+  background:linear-gradient(145deg,#131c30,#0d1423);
+  box-shadow:0 30px 100px #0008;
+}
+.modal-header{
+  position:sticky;top:0;z-index:2;display:flex;align-items:center;
+  justify-content:space-between;gap:15px;padding:20px 24px;
+  border-bottom:1px solid var(--border);background:rgba(16,22,38,.96);
+  backdrop-filter:blur(12px);
+}
+.modal-title-wrap{display:flex;align-items:center;gap:13px}
+.modal-icon{
+  width:43px;height:43px;display:grid;place-items:center;border-radius:13px;
+  background:linear-gradient(135deg,#8b5cf6,#2563eb);font-size:21px;
+}
+.modal-header h2{font-size:17px;margin:0}
+.modal-header p{font-size:11px;color:var(--muted);margin:5px 0 0}
+.close{
+  border:1px solid var(--border);background:#ffffff08;color:#aab6cc;
+  width:38px;height:38px;border-radius:12px;cursor:pointer;font-size:18px;
+}
+.close:hover{color:#fff;background:#ffffff12}
+.editor-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:22px;padding:24px}
+.editor-left,.editor-right{min-width:0}
+.panel-label{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  color:#d8def0;font-size:12px;font-weight:700;margin-bottom:12px;
+}
+.upload-zone{
+  min-height:220px;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:10px;padding:22px;text-align:center;
+  border:1px dashed #465371;border-radius:17px;
+  background:rgba(8,13,25,.5);transition:.2s;
+}
+.upload-zone.dragover{border-color:var(--cyan);background:#22d3ee0b}
+.upload-symbol{font-size:34px;opacity:.9}
+.upload-zone strong{font-size:13px}
+.upload-zone p{font-size:11px;color:var(--muted);line-height:1.7;margin:0}
+.file-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:10px 15px;border-radius:10px;background:#8b5cf6;color:white;
+  font-size:12px;font-weight:700;cursor:pointer;border:0;
+}
+#fileInput{display:none}
+.preview-wrap{
+  display:none;margin-top:14px;padding:12px;border:1px solid var(--border);
+  background:#080d19;border-radius:15px;min-height:150px;
+  align-items:center;justify-content:center;overflow:hidden;
+}
+#canvas{display:block;max-width:100%;max-height:350px;width:auto;height:auto;object-fit:contain;border-radius:8px}
+.controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-top:18px}
+.field{min-width:0}
+.field.full{grid-column:1/-1}
+.field label{display:block;font-size:11px;color:#b6c3d9;margin-bottom:7px}
+.field input,.field select,.field textarea{
+  width:100%;min-width:0;border:1px solid var(--border);border-radius:10px;
+  background:#0b1220;color:var(--text);padding:11px 12px;outline:none;font-size:12px;
+}
+.field textarea{resize:vertical;min-height:76px;line-height:1.6}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#8b5cf6}
+.field input[type="range"]{padding:0;accent-color:#8b5cf6}
+.field input[type="color"]{height:40px;padding:4px;cursor:pointer}
+.hint{font-size:10px;color:#71809c;line-height:1.7;margin-top:7px}
+.primary-btn,.secondary-btn{
+  border:0;border-radius:11px;padding:12px 17px;font-size:12px;
+  font-weight:700;cursor:pointer;transition:transform .2s,opacity .2s;
+}
+.primary-btn{background:linear-gradient(120deg,#8b5cf6,#6366f1);box-shadow:0 6px 20px #8b5cf629}
+.secondary-btn{background:#ffffff0a;border:1px solid var(--border);color:#d6def0}
+.primary-btn:hover,.secondary-btn:hover{transform:translateY(-1px)}
+.run-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.run-row button{flex:1}
+.result-panel{
+  min-height:180px;border:1px solid var(--border);border-radius:16px;
+  background:rgba(6,11,22,.55);padding:15px;overflow:auto;
+}
+.result-placeholder{
+  min-height:145px;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:10px;text-align:center;color:#6f7f9d;
+}
+.result-placeholder span{font-size:28px}
+.result-placeholder p{font-size:11px;line-height:1.7;margin:0}
+#output{font-size:12px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere;color:#dbe5f6}
+#output img{display:block;max-width:100%;height:auto;margin:0 auto;border-radius:10px}
+#output a{color:#a5b4fc}
+.result-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.result-actions button{flex:1}
+.status{font-size:11px;line-height:1.6;color:var(--muted);margin-top:10px;min-height:16px}
+.status.error{color:#fca5a5}
+.status.success{color:#86efac}
+#downloadLink{display:none;text-decoration:none}
+.disclaimer{font-size:10px;color:#71809c;line-height:1.7;margin-top:14px}
+@media(max-width:1050px){.tools{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:720px){
+  .topbar{height:65px;padding:0 5%}
+  .top-label{display:none}
+  .hero{padding:55px 20px 30px}
+  h1{letter-spacing:-1.7px}
+  .workspace{padding:22px 5% 55px}
+  .tools{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .tool{padding:16px;border-radius:16px}
+  .tool-icon{width:40px;height:40px;font-size:19px}
+  .tool h3{font-size:13px;margin-top:15px}
+  .tool p{font-size:11px}
+  .editor-grid{grid-template-columns:1fr;padding:18px}
+  .modal{padding:9px}
+  .modal-content{max-height:96vh;border-radius:18px}
+  .modal-header{padding:15px 17px}
+  .stats{gap:14px}
+}
+@media(max-width:390px){
+  .tools{grid-template-columns:1fr}
+  .tool p{min-height:0}
+  .controls{grid-template-columns:1fr}
+  .field.full{grid-column:auto}
+}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="brand">
+    <div class="brand-icon">✦</div>
+    <div class="brand-name">Image<span>Tools</span></div>
+  </div>
+  <div class="top-label">✦ Creator Toolkit</div>
+</nav>
+
+<header class="hero">
+  <div class="eyebrow"><span class="eyebrow-dot"></span> Image workspace</div>
+  <h1>Your images.<br><span class="gradient-text">Your creative edge.</span></h1>
+  <p>Edit, convert, optimize and extract text from images in one streamlined workspace. Choose a tool to get started.</p>
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input type="search" id="search" placeholder="Search image tools..." autocomplete="off" aria-label="Search image tools">
+  </div>
+  <div class="stats">
+    <div class="stat"><span class="stat-icon">✦</span><strong id="statCount">20 tools</strong></div>
+    <div class="stat"><span class="stat-icon">◇</span>Browser-based tools</div>
+    <div class="stat"><span class="stat-icon">↗</span>Simple workflow</div>
+  </div>
+</header>
+
+<main class="workspace">
+  <div class="section-head">
+    <div>
+      <div class="section-title">Explore image tools</div>
+      <div class="section-subtitle">Everything you need to work with images.</div>
+    </div>
+    <div class="tool-count" id="toolCount">20 tools</div>
+  </div>
+
+  <div class="filters" id="filters" aria-label="Filter tools">
+    <button class="filter active" data-category="All">All tools</button>
+    <button class="filter" data-category="Editing">Editing</button>
+    <button class="filter" data-category="Conversion">Conversion</button>
+    <button class="filter" data-category="Design">Design</button>
+    <button class="filter" data-category="Analysis">Analysis</button>
+    <button class="filter" data-category="AI">AI tools</button>
+  </div>
+
+  <section class="tools" id="tools" aria-label="Image tools"></section>
+  <div class="empty-state" id="emptyState">
+    <strong>No matching tools found</strong>
+    Try another search or choose a different category.
+  </div>
+</main>
+
+<footer>ImageTools · A creative workspace for everyday image tasks</footer>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <div class="modal-icon" id="modalIcon">✦</div>
+        <div>
+          <h2 id="modalTitle">Image tool</h2>
+          <p id="modalDescription">Upload an image to get started.</p>
+        </div>
+      </div>
+      <button class="close" id="closeBtn" aria-label="Close tool">✕</button>
+    </div>
+
+    <div class="editor-grid">
+      <section class="editor-left">
+        <div class="panel-label">
+          <span>01 / Image input</span>
+          <span id="fileInfo" class="tool-count">No image selected</span>
+        </div>
+
+        <div class="upload-zone" id="uploadZone">
+          <div class="upload-symbol">▧</div>
+          <strong>Drop your image here</strong>
+          <p>or choose a file from your device<br>PNG, JPG, WebP, GIF and other browser-supported images</p>
+          <label class="file-btn" for="fileInput">Choose image</label>
+          <input type="file" id="fileInput" accept="image/*">
+        </div>
+
+        <div class="preview-wrap" id="previewWrap">
+          <canvas id="canvas"></canvas>
+        </div>
+
+        <div class="controls" id="controls"></div>
+        <div class="run-row">
+          <button class="primary-btn" id="runBtn">Run tool ↗</button>
+          <button class="secondary-btn" id="resetBtn">Reset image</button>
+        </div>
+        <div class="status" id="status" role="status" aria-live="polite"></div>
+      </section>
+
+      <section class="editor-right">
+        <div class="panel-label">
+          <span>02 / Results</span>
+          <span class="tool-count" id="resultType">Output preview</span>
+        </div>
+        <div class="result-panel">
+          <div class="result-placeholder" id="resultPlaceholder">
+            <span>✧</span>
+            <p>Your result will appear here.<br>Upload an image and run the tool.</p>
+          </div>
+          <div id="output" hidden></div>
+        </div>
+        <div class="result-actions">
+          <button class="secondary-btn" id="downloadBtn" disabled>Download result</button>
+          <button class="secondary-btn" id="copyBtn" disabled>Copy text</button>
+        </div>
+        <div class="disclaimer" id="disclaimer">
+          Image processing is performed in your browser for supported tools. Some AI features require an external service.
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+const toolList = [
+  {name:"Image to Text (OCR)",icon:"⌕",category:"Analysis",desc:"Extract readable text from an image using OCR."},
+  {name:"Compress Image",icon:"⇣",category:"Editing",desc:"Reduce image file size and adjust output quality."},
+  {name:"Resize Image",icon:"⤢",category:"Editing",desc:"Set custom image dimensions for any project."},
+  {name:"Crop Image",icon:"⌗",category:"Editing",desc:"Crop an image by entering the desired dimensions."},
+  {name:"Convert Image Format",icon:"⇄",category:"Conversion",desc:"Export supported images as PNG, JPEG or WebP."},
+  {name:"Image Background Remover",icon:"◈",category:"AI",desc:"Prepare an image for background removal with an AI service."},
+  {name:"Image Upscaler",icon:"⤢",category:"AI",desc:"Prepare images for higher-resolution AI upscaling."},
+  {name:"Blur Image",icon:"◌",category:"Editing",desc:"Apply adjustable blur to soften an image."},
+  {name:"Sharpen Image",icon:"✧",category:"Editing",desc:"Enhance edge definition with a sharpening filter."},
+  {name:"Grayscale Image",icon:"◐",category:"Editing",desc:"Create a clean black-and-white image."},
+  {name:"Image Watermark Tool",icon:"◩",category:"Design",desc:"Overlay a custom watermark on your image."},
+  {name:"Add Text to Image",icon:"T",category:"Design",desc:"Add custom text with adjustable color and size."},
+  {name:"Meme Generator",icon:"☻",category:"Design",desc:"Add classic top and bottom meme captions."},
+  {name:"Image Color Picker",icon:"◉",category:"Analysis",desc:"Click any point on your image to read its color."},
+  {name:"Image Metadata Viewer",icon:"ⓘ",category:"Analysis",desc:"Inspect image dimensions, format and file details."},
+  {name:"Image Rotator",icon:"↻",category:"Editing",desc:"Rotate an image by 90, 180 or 270 degrees."},
+  {name:"Image Flipper",icon:"⇋",category:"Editing",desc:"Flip an image horizontally or vertically."},
+  {name:"AI Image Generator",icon:"✦",category:"AI",desc:"Connect an image-generation API to create new visuals."},
+  {name:"AI Image Enhancer",icon:"✧",category:"AI",desc:"Connect an AI service for advanced image enhancement."},
+  {name:"Passport Photo Generator",icon:"▣",category:"Design",desc:"Create a portrait crop with custom dimensions."}
+];
+
+const $ = id => document.getElementById(id);
+const toolsEl = $("tools");
+const modal = $("modal");
+const canvas = $("canvas");
+const ctx = canvas.getContext("2d", {willReadFrequently:true});
+const fileInput = $("fileInput");
+const output = $("output");
+const controls = $("controls");
+const uploadZone = $("uploadZone");
+
+let currentTool = null;
+let sourceImage = null;
+let sourceFile = null;
+let sourceURL = null;
+let resultBlob = null;
+let resultText = "";
+let activeCategory = "All";
+let busy = false;
+
+const descriptions = {
+  "Image to Text (OCR)":"Extract text from your uploaded image.",
+  "Compress Image":"Adjust image quality and export size.",
+  "Resize Image":"Enter the dimensions you want.",
+  "Crop Image":"Set the crop width, height and starting position.",
+  "Convert Image Format":"Choose an output image format.",
+  "Image Background Remover":"Background removal requires an AI segmentation service.",
+  "Image Upscaler":"Advanced upscaling requires an AI image service.",
+  "Blur Image":"Adjust the amount of blur.",
+  "Sharpen Image":"Adjust edge sharpening strength.",
+  "Grayscale Image":"Convert your image to black and white.",
+  "Image Watermark Tool":"Add a watermark over your image.",
+  "Add Text to Image":"Overlay a caption on your image.",
+  "Meme Generator":"Add top and bottom captions.",
+  "Image Color Picker":"Run the tool, then click the image to sample a color.",
+  "Image Metadata Viewer":"Inspect details about the selected file.",
+  "Image Rotator":"Choose a rotation angle.",
+  "Image Flipper":"Choose a flip direction.",
+  "AI Image Generator":"An image-generation API is required for actual AI generation.",
+  "AI Image Enhancer":"An AI image-processing API is required for enhancement.",
+  "Passport Photo Generator":"Create a portrait crop with custom dimensions."
+};
+
+function renderTools(){
+  toolsEl.innerHTML = "";
+  const query = $("search").value.trim().toLowerCase();
+  const filtered = toolList.filter(t =>
+    (activeCategory === "All" || t.category === activeCategory) &&
+    (t.name + " " + t.desc + " " + t.category).toLowerCase().includes(query)
+  );
+
+  filtered.forEach(t => {
+    const card = document.createElement("article");
+    card.className = "tool";
+    card.tabIndex = 0;
+    card.setAttribute("role","button");
+    card.setAttribute("aria-label","Open " + t.name);
+
+    const top = document.createElement("div");
+    top.className = "tool-top";
+    const icon = document.createElement("div");
+    icon.className = "tool-icon";
+    icon.textContent = t.icon;
+    const arrow = document.createElement("span");
+    arrow.className = "tool-arrow";
+    arrow.textContent = "↗";
+    top.append(icon,arrow);
+
+    const title = document.createElement("h3");
+    title.textContent = t.name;
+    const desc = document.createElement("p");
+    desc.textContent = t.desc;
+    const footer = document.createElement("div");
+    footer.className = "tool-footer";
+    const tag = document.createElement("span");
+    tag.className = "tag";
+    tag.textContent = t.category;
+    const link = document.createElement("span");
+    link.className = "tool-link";
+    link.textContent = "Open tool";
+    footer.append(tag,link);
+    card.append(top,title,desc,footer);
+    card.addEventListener("click",() => openModal(t.name));
+    card.addEventListener("keydown",e => {
+      if(e.key === "Enter" || e.key === " "){
+        e.preventDefault();
+        openModal(t.name);
+      }
+    });
+    toolsEl.appendChild(card);
+  });
+
+  $("toolCount").textContent = filtered.length + (filtered.length === 1 ? " tool" : " tools");
+  $("statCount").textContent = toolList.length + " tools";
+  $("emptyState").style.display = filtered.length ? "none" : "block";
+}
+
+$("search").addEventListener("input",renderTools);
+$("filters").addEventListener("click",e => {
+  const button = e.target.closest("[data-category]");
+  if(!button) return;
+  activeCategory = button.dataset.category;
+  document.querySelectorAll(".filter").forEach(b => b.classList.toggle("active",b === button));
+  renderTools();
+});
+
+function addField(label,name,value="",type="text",extra={}){
+  const wrap = document.createElement("div");
+  wrap.className = "field" + (extra.full ? " full" : "");
+  const lab = document.createElement("label");
+  lab.htmlFor = "field_" + name;
+  lab.textContent = label;
+  const input = type === "select" ? document.createElement("select") :
+    type === "textarea" ? document.createElement("textarea") :
+    document.createElement("input");
+  input.id = "field_" + name;
+  input.dataset.name = name;
+
+  if(type === "select"){
+    (extra.options || []).forEach(opt => {
+      const o = document.createElement("option");
+      o.value = opt.value;
+      o.textContent = opt.label;
+      input.appendChild(o);
+    });
+    input.value = value;
+  } else if(type === "textarea"){
+    input.value = value;
+    input.placeholder = extra.placeholder || "";
+    input.rows = extra.rows || 3;
+  } else {
+    input.type = type;
+    if(value !== "") input.value = value;
+    if(extra.min !== undefined) input.min = extra.min;
+    if(extra.max !== undefined) input.max = extra.max;
+    if(extra.step !== undefined) input.step = extra.step;
+    if(extra.placeholder) input.placeholder = extra.placeholder;
+  }
+
+  wrap.append(lab,input);
+  if(extra.hint){
+    const hint = document.createElement("div");
+    hint.className = "hint";
+    hint.textContent = extra.hint;
+    wrap.appendChild(hint);
+  }
+  controls.appendChild(wrap);
+  return input;
+}
+
+function setupControls(name){
+  controls.innerHTML = "";
+  switch(name){
+    case "Compress Image":
+      addField("Output quality","quality","0.78","range",{min:0.1,max:1,step:0.05,hint:"Lower quality usually means a smaller file."});
+      addField("Output format","format","image/jpeg","select",{options:[
+        {value:"image/jpeg",label:"JPEG"},{value:"image/webp",label:"WebP"},{value:"image/png",label:"PNG"}
+      ]});
+      break;
+    case "Resize Image":
+      addField("Width (px)","width","800","number",{min:1,max:12000});
+      addField("Height (px)","height","800","number",{min:1,max:12000});
+      addField("Keep aspect ratio","keepRatio","yes","select",{options:[{value:"yes",label:"Yes"},{value:"no",label:"No"}]});
+      break;
+    case "Crop Image":
+      addField("Crop width (px)","width","500","number",{min:1});
+      addField("Crop height (px)","height","500","number",{min:1});
+      addField("Start X (px)","x","0","number",{min:0});
+      addField("Start Y (px)","y","0","number",{min:0});
+      break;
+    case "Convert Image Format":
+      addField("Output format","format","image/png","select",{options:[
+        {value:"image/png",label:"PNG"},{value:"image/jpeg",label:"JPEG"},{value:"image/webp",label:"WebP"}
+      ]});
+      break;
+    case "Blur Image":
+      addField("Blur strength","blur","4","range",{min:1,max:20,step:1});
+      break;
+    case "Sharpen Image":
+      addField("Sharpen strength","strength","1","range",{min:0.2,max:2,step:0.1,hint:"Higher values increase edge contrast."});
+      break;
+    case "Image Watermark Tool":
+      addField("Watermark text","text","© Your Brand","text",{full:true});
+      addField("Text size (px)","size","28","number",{min:8,max:250});
+      addField("Text color","color","#ffffff","color");
+      addField("Position","position","bottom-right","select",{options:[
+        {value:"top-left",label:"Top left"},{value:"top-right",label:"Top right"},
+        {value:"bottom-left",label:"Bottom left"},{value:"bottom-right",label:"Bottom right"},
+        {value:"center",label:"Center"}
+      ]});
+      break;
+    case "Add Text to Image":
+      addField("Text","text","","textarea",{full:true,placeholder:"Type your caption...",rows:3});
+      addField("Text size (px)","size","36","number",{min:8,max:250});
+      addField("Text color","color","#ffffff","color");
+      addField("Position","position","bottom","select",{options:[
+        {value:"top",label:"Top"},{value:"center",label:"Center"},{value:"bottom",label:"Bottom"}
+      ]});
+      break;
+    case "Meme Generator":
+      addField("Top caption","topText","WHEN YOU FINALLY FINISH","text",{full:true});
+      addField("Bottom caption","bottomText","THE PROJECT","text",{full:true});
+      addField("Text size (px)","size","36","number",{min:10,max:160});
+      break;
+    case "Image Rotator":
+      addField("Rotation angle","angle","90","select",{options:[
+        {value:"90",label:"90° clockwise"},{value:"180",label:"180°"},{value:"270",label:"270° clockwise"}
+      ]});
+      break;
+    case "Image Flipper":
+      addField("Flip direction","direction","horizontal","select",{options:[
+        {value:"horizontal",label:"Horizontal"},{value:"vertical",label:"Vertical"}
+      ]});
+      break;
+    case "Passport Photo Generator":
+      addField("Width (px)","width","600","number",{min:100,max:3000});
+      addField("Height (px)","height","600","number",{min:100,max:3000});
+      addField("Background","background","#ffffff","color");
+      addField("Fit image","fit","contain","select",{options:[
+        {value:"cover",label:"Fill crop"},{value:"contain",label:"Fit entire image"}
+      ]});
+      break;
+    case "Image Background Remover":
+    case "Image Upscaler":
+    case "AI Image Generator":
+    case "AI Image Enhancer":
+      addField("Optional instructions","prompt","","textarea",{full:true,placeholder:"Describe the result you want...",rows:3});
+      break;
+    default:
+      break;
+  }
+}
+
+function field(name){
+  const el = controls.querySelector('[data-name="' + name + '"]');
+  return el ? el.value : "";
+}
+function setStatus(message,type=""){
+  $("status").textContent = message;
+  $("status").className = "status" + (type ? " " + type : "");
+}
+function clearResult(){
+  output.innerHTML = "";
+  output.hidden = true;
+  $("resultPlaceholder").style.display = "flex";
+  $("downloadBtn").disabled = true;
+  $("copyBtn").disabled = true;
+  $("downloadLink").style.display = "none";
+  resultBlob = null;
+  resultText = "";
+}
+function showText(text){
+  clearResult();
+  resultText = text;
+  output.textContent = text;
+  output.hidden = false;
+  $("resultPlaceholder").style.display = "none";
+  $("copyBtn").disabled = !text;
+}
+function showBlob(blob,mime){
+  clearResult();
+  resultBlob = blob;
+  const url = URL.createObjectURL(blob);
+  const image = document.createElement("img");
+  image.alt = "Processed image preview";
+  image.src = url;
+  output.appendChild(image);
+  output.hidden = false;
+  $("resultPlaceholder").style.display = "none";
+  $("downloadBtn").disabled = false;
+  $("copyBtn").disabled = true;
+  $("downloadBtn").onclick = () => downloadBlob(resultBlob,outputName(mime));
+}
+function outputName(mime){
+  const ext = mime === "image/jpeg" ? "jpg" : mime === "image/webp" ? "webp" : "png";
+  return (sourceFile ? sourceFile.name.replace(/\.[^.]+$/,"") : "image") + "-edited." + ext;
+}
+function downloadBlob(blob,name){
+  if(!blob) return;
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;a.download = name;
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(() => URL.revokeObjectURL(url),1500);
+}
+function canvasBlob(type="image/png",quality=.92){
+  return new Promise((resolve,reject)=>{
+    canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("Could not export this image format.")),type,quality);
+  });
+}
+function ensureImage(){
+  if(!sourceImage) throw new Error("Please upload an image first.");
+}
+function drawSource(){
+  ensureImage();
+  canvas.width = sourceImage.naturalWidth;
+  canvas.height = sourceImage.naturalHeight;
+  ctx.filter = "none";
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.drawImage(sourceImage,0,0);
+  $("previewWrap").style.display = "flex";
+}
+function getPosition(position,size,padding){
+  if(position === "left" || position === "top-left" || position === "bottom-left") return padding;
+  if(position === "right" || position === "top-right" || position === "bottom-right") return size-padding;
+  return size/2;
+}
+function drawCaption(text,x,y,size,color,align="center",stroke=true){
+  ctx.font = "800 " + size + "px Impact, Arial Black, sans-serif";
+  ctx.textAlign = align;
+  ctx.textBaseline = "middle";
+  ctx.lineJoin = "round";
+  if(stroke){
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = Math.max(2,size/12);
+    ctx.strokeText(text,x,y,canvas.width*.94);
+  }
+  ctx.fillStyle = color;
+  ctx.fillText(text,x,y,canvas.width*.94);
+}
+function drawAtPosition(text,size,color,position){
+  const pad = Math.max(15,size*.65);
+  let x = canvas.width/2,y = canvas.height/2,align="center";
+  if(position.includes("left")){x=pad;align="left"}
+  if(position.includes("right")){x=canvas.width-pad;align="right"}
+  if(position.startsWith("top"))y=pad+size/2;
+  if(position.startsWith("bottom"))y=canvas.height-pad-size/2;
+  drawCaption(text,x,y,size,color,align,false);
+}
+function loadFile(file){
+  if(!file) return;
+  if(!file.type.startsWith("image/")){
+    setStatus("Please select a valid image file.","error");return;
+  }
+  if(file.size > 25*1024*1024){
+    setStatus("Please choose an image smaller than 25 MB.","error");return;
+  }
+  if(sourceURL) URL.revokeObjectURL(sourceURL);
+  sourceFile = file;
+  sourceURL = URL.createObjectURL(file);
+  const image = new Image();
+  image.onload = () => {
+    sourceImage = image;
+    drawSource();
+    $("fileInfo").textContent = image.naturalWidth + " × " + image.naturalHeight;
+    clearResult();
+    setStatus("Image loaded successfully.","success");
+  };
+  image.onerror = () => setStatus("This image could not be opened by your browser.","error");
+  image.src = sourceURL;
+}
+fileInput.addEventListener("change",e => loadFile(e.target.files[0]));
+
+uploadZone.addEventListener("dragover",e=>{
+  e.preventDefault();uploadZone.classList.add("dragover");
+});
+uploadZone.addEventListener("dragleave",()=>uploadZone.classList.remove("dragover"));
+uploadZone.addEventListener("drop",e=>{
+  e.preventDefault();uploadZone.classList.remove("dragover");
+  loadFile(e.dataTransfer.files[0]);
+});
+
+function openModal(name){
+  currentTool = toolList.find(t=>t.name === name);
+  if(!currentTool) return;
+  $("modalTitle").textContent = name;
+  $("modalDescription").textContent = descriptions[name] || currentTool.desc;
+  $("modalIcon").textContent = currentTool.icon;
+  $("resultType").textContent = name.includes("AI") ? "AI integration" : "Output preview";
+  setupControls(name);
+  clearResult();
+  setStatus("");
+  modal.classList.add("open");
+  document.body.style.overflow = "hidden";
+  fileInput.value = "";
+  if(sourceURL){URL.revokeObjectURL(sourceURL);sourceURL=null}
+  sourceFile = null;
+  sourceImage = null;
+  canvas.width = 0;canvas.height = 0;
+  $("previewWrap").style.display = "none";
+  $("fileInfo").textContent = "No image selected";
+  $("runBtn").disabled = false;
+  $("runBtn").textContent = "Run tool ↗";
+  $("copyBtn").onclick = copyResult;
+  $("downloadBtn").onclick = () => resultBlob && downloadBlob(resultBlob,outputName(resultBlob.type));
+  $("closeBtn").focus();
+}
+function closeModal(){
+  if(busy) return;
+  modal.classList.remove("open");
+  document.body.style.overflow = "";
+}
+$("closeBtn").addEventListener("click",closeModal);
+modal.addEventListener("click",e=>{if(e.target === modal) closeModal()});
+document.addEventListener("keydown",e=>{
+  if(e.key === "Escape" && modal.classList.contains("open")) closeModal();
+});
+
+$("resetBtn").addEventListener("click",()=>{
+  if(!sourceImage){setStatus("Upload an image to reset the workspace.","error");return}
+  drawSource();
+  clearResult();
+  setStatus("Preview reset to the original image.","success");
+});
+
+async function runTool(){
+  if(busy) return;
+  busy = true;
+  $("runBtn").disabled = true;
+  $("runBtn").textContent = "Processing…";
+  setStatus("Processing your request…");
+  try{
+    switch(currentTool.name){
+      case "Image to Text (OCR)":{
+        ensureImage();
+        if(!window.Tesseract) throw new Error("OCR library could not load. Check your internet connection.");
+        const worker = await Tesseract.createWorker("eng");
+        try{
+          const result = await worker.recognize(canvas);
+          showText(result.data.text || "No readable text was detected.");
+          setStatus("Text extraction complete.","success");
+        }finally{await worker.terminate()}
+        break;
+      }
+      case "Compress Image":{
+        ensureImage();
+        const type = field("format");
+        const blob = await canvasBlob(type,Number(field("quality")) || .78);
+        showBlob(blob,type);
+        setStatus("Compressed image ready to download.","success");
+        break;
+      }
+      case "Resize Image":{
+        ensureImage();
+        let w = Number(field("width")),h = Number(field("height"));
+        if(!Number.isFinite(w)||!Number.isFinite(h)||w<1||h<1||w>12000||h>12000) throw new Error("Enter valid dimensions between 1 and 12,000 pixels.");
+        if(field("keepRatio")==="yes"){
+          const ratio=sourceImage.naturalWidth/sourceImage.naturalHeight;
+          if(w/h > ratio) w=Math.round(h*ratio); else h=Math.round(w/ratio);
+        }
+        canvas.width=Math.round(w);canvas.height=Math.round(h);
+        ctx.drawImage(sourceImage,0,0,canvas.width,canvas.height);
+        showBlob(await canvasBlob(),"image/png");
+        setStatus("Resized to "+canvas.width+" × "+canvas.height+" pixels.","success");
+        break;
+      }
+      case "Crop Image":{
+        ensureImage();
+        const x=Number(field("x")),y=Number(field("y")),w=Number(field("width")),h=Number(field("height"));
+        if(![x,y,w,h].every(Number.isFinite)||x<0||y<0||w<1||h<1||x+w>sourceImage.naturalWidth||y+h>sourceImage.naturalHeight) throw new Error("Crop dimensions must fit inside the original image.");
+        canvas.width=w;canvas.height=h;
+        ctx.drawImage(sourceImage,x,y,w,h,0,0,w,h);
+        showBlob(await canvasBlob(),"image/png");
+        setStatus("Crop created successfully.","success");
+        break;
+      }
+      case "Convert Image Format":{
+        ensureImage();
+        const type=field("format");
+        const blob=await canvasBlob(type,.92);
+        if(type==="image/jpeg" && sourceFile.type==="image/png") setStatus("Transparent areas may become black in JPEG output.","");
+        showBlob(blob,type);
+        setStatus("Image converted successfully.","success");
+        break;
+      }
+      case "Blur Image":{
+        ensureImage();
+        canvas.width=sourceImage.naturalWidth;canvas.height=sourceImage.naturalHeight;
+        ctx.filter="blur("+Number(field("blur"))+"px)";
+        ctx.drawImage(sourceImage,0,0);
+        ctx.filter="none";
+        showBlob(await canvasBlob(),"image/png");
+        setStatus("Blur effect applied.","success");
+        break;
+      }
+      case "Sharpen Image":{
+        ensureImage();
+        const w=sourceImage.naturalWidth,h=sourceImage.naturalHeight;
+        if(w*h>12000000) throw new Error("This image is too large for browser-based sharpening. Resize it first.");
+        canvas.width=w;canvas.height=h;ctx.drawImage(sourceImage,0,0);
+        const imageData=ctx.getImageData(0,0,w,h);
+        const src=imageData.data,original=new Uint8ClampedArray(src);
+        const strength=Number(field("strength"))||1;
+        for(let y=1;y<h-1;y++){
+          for(let x=1;x<w-1;x++){
+            const i=(y*w+x)*4;
+            for(let c=0;c<3;c++){
+              const neighbor=(original[i-4+c]+original[i+4+c]+original[i-w*4+c]+original[i+w*4+c])/4;
+              src[i+c]=original[i+c]+(original[i+c]-neighbor)*strength;
+            }
+          }
+        }
+        ctx.putImageData(imageData,0,0);
+        showBlob(await canvasBlob(),"image/png");
+        setStatus("Sharpening applied.","success");
+        break;
+      }
+      case "Grayscale Image":{
+        ensureImage();drawSource();
+        const d=ctx.getImageData(0,0,canvas.width,canvas.height);
+        for(let i=0;i<d.data.length;i+=4){
+          const g=.299*d.data[i]+.587*d.data[i+1]+.114*d.data[i+2];
+          d.data[i]=d.data[i+1]=d.data[i+2]=g;
+        }
+        ctx.putImageData(d,0,0);
+        showBlob(await canvasBlob(),"image/png");
+        setStatus("Grayscale effect applied.","success");
+        break;
+      }
+      case "Image Watermark Tool":{
+        ensureImage();drawSource();
+        const text=field("text").trim();
+        if(!text) throw new Error("Enter watermark text first.");
+        const size=Math.min(250,Math.max(8,Number(field("size"))||28));
+        drawAtPosition(text,size,field("color"),field("position"));
+        showBlob(await canvasBlob(),"image/png");
+        setStatus("Watermark added.","success");
+        break;
+      }
+      case "Add Text to Image":{
+        ensureImage();drawSource();
+        const text=field("text").trim();
+        if(!text) throw new Error("Enter text to add to the image.");
+        const size=Math.min(250,Math.max(8,Number(field("size"))||36));
+        const position=field("position");
+        const y=position==="top"?size+15:position==="bottom"?canvas.height-size-15:canvas.height/2;
+        drawCaption(text,canvas.width/2,y,size,field("color"),"center",true);
+        showBlob(await canvasBlob(),"image/png");
+        setStatus("Text added to image.","success");
+        break;
+      }
+      case "Meme Generator":{
+        ensureImage();drawSource();
+        const size=Math.min(160,Math.max(10,Number(field("size"))||36));
+        if(field("topText").trim()) drawCaption(field("topText").toUpperCase(),canvas.width/2,size+12,size,"#ffffff","center",true);
+        if(field("bottomText").trim()) drawCaption(field("bottomText").toUpperCase(),canvas.width/2,canvas.height-size-12,size,"#ffffff","center",true);
+        showBlob(await canvasBlob(),"image/png");
+        setStatus("Meme image created.","success");
+        break;
+      }
+      case "Image Color Picker":{
+        ensureImage();drawSource();
+        showText("Click a point on the image preview to sample its color.");
+        canvas.style.cursor="crosshair";
+        canvas.onclick=e=>{
+          const rect=canvas.getBoundingClientRect();
+          const x=Math.min(canvas.width-1,Math.max(0,Math.floor((e.clientX-rect.left)*canvas.width/rect.width)));
+          const y=Math.min(canvas.height-1,Math.max(0,Math.floor((e.clientY-rect.top)*canvas.height/rect.height)));
+          const p=ctx.getImageData(x,y,1,1).data;
+          const hex="#"+[p[0],p[1],p[2]].map(v=>v.toString(16).padStart(2,"0")).join("").toUpperCase();
+          showText("HEX: "+hex+"\nRGB: "+p[0]+", "+p[1]+", "+p[2]);
+          const swatch=document.createElement("div");
+          swatch.style.cssText="height:40px;border-radius:8px;margin-top:10px;border:1px solid #ffffff25;background:"+hex;
+          output.appendChild(swatch);
+          canvas.onclick=null;canvas.style.cursor="default";
+          setStatus("Color sampled: "+hex,"success");
+        };
+        setStatus("Click a pixel in the image preview.","success");
+        break;
+      }
+      case "Image Metadata Viewer":{
+        ensureImage();
+        const rows=[
+          ["File name",sourceFile.name],
+          ["File type",sourceFile.type||"Unknown"],
+          ["File size",(sourceFile.size/1024).toFixed(2)+" KB"],
+          ["Image width",sourceImage.naturalWidth+" px"],
+          ["Image height",sourceImage.naturalHeight+" px"],
+          ["Aspect ratio",(sourceImage.naturalWidth/sourceImage.naturalHeight).toFixed(3)],
+          ["Last modified",sourceFile.lastModified?new Date(sourceFile.lastModified).toLocaleString():"Unknown"]
+        ];
+        clearResult();
+        const table=document.createElement("div");
+        table.style.cssText="display:grid;gap:12px";
+        rows.forEach(([k,v])=>{
+          const row=document.createElement("div");
+          row.style.cssText="display:flex;justify-content:space-between;gap:15px;border-bottom:1px solid #ffffff10;padding-bottom:9px";
+          const key=document.createElement("span");key.style.color="#94a3bd";key.textContent=k;
+          const val=document.createElement("strong");val.style.textAlign="right";val.style.overflowWrap="anywhere";val.textContent=v;
+          row.append(key,val);table.appendChild(row);
+        });
+        output.appendChild(table);output.hidden=false;$("resultPlaceholder").style.display="none";
+        setStatus("Metadata inspection complete. Embedded EXIF data is not shown.","success");
+        break;
+      }
+      case "Image Rotator":{
+        ensureImage();
+        const angle=Number(field("angle"))||90;
+        const w=sourceImage.naturalWidth,h=sourceImage.naturalHeight;
+        const swap=angle===90||angle===270;
+        canvas.width=swap?h:w;canvas.height=swap?w:h;
+        ctx.save();ctx.translate(canvas.width/2,canvas.height/2);ctx.rotate(angle*Math.PI/180);
+        ctx.drawImage(sourceImage,-w/2,-h/2);ctx.restore();
+        showBlob(await canvasBlob(),"image/png");
+        setStatus("Image rotated "+angle+"°.","success");
+        break;
+      }
+      case "Image Flipper":{
+        ensureImage();
+        const w=sourceImage.naturalWidth,h=sourceImage.naturalHeight;
+        canvas.width=w;canvas.height=h;
+        ctx.save();
+        if(field("direction")==="horizontal"){ctx.translate(w,0);ctx.scale(-1,1)}
+        else{ctx.translate(0,h);ctx.scale(1,-1)}
+        ctx.drawImage(sourceImage,0,0);ctx.restore();
+        showBlob(await canvasBlob(),"image/png");
+        setStatus("Image flipped.","success");
+        break;
+      }
+      case "Passport Photo Generator":{
+        ensureImage();
+        const w=Number(field("width")),h=Number(field("height"));
+        if(!w||!h||w<100||h<100||w>3000||h>3000) throw new Error("Choose dimensions between 100 and 3,000 pixels.");
+        canvas.width=w;canvas.height=h;
+        ctx.fillStyle=field("background")||"#ffffff";ctx.fillRect(0,0,w,h);
+        if(field("fit")==="cover"){
+          const scale=Math.max(w/sourceImage.naturalWidth,h/sourceImage.naturalHeight);
+          const sw=w/scale,sh=h/scale;
+          ctx.drawImage(sourceImage,(sourceImage.naturalWidth-sw)/2,(sourceImage.naturalHeight-sh)/2,sw,sh,0,0,w,h);
+        }else{
+          const scale=Math.min(w/sourceImage.naturalWidth,h/sourceImage.naturalHeight);
+          const dw=sourceImage.naturalWidth*scale,dh=sourceImage.naturalHeight*scale;
+          ctx.drawImage(sourceImage,(w-dw)/2,(h-dh)/2,dw,dh);
+        }
+        showBlob(await canvasBlob(),"image/png");
+        setStatus("Portrait crop created. Check your local passport photo rules before using it officially.","success");
+        break;
+      }
+      case "Image Background Remover":
+        throw new Error("This page does not include a background-removal AI model. Connect an image segmentation API or model to enable this feature.");
+      case "Image Upscaler":
+        throw new Error("AI upscaling requires an external AI image service. No upscaling request was sent.");
+      case "AI Image Generator":
+        throw new Error("Connect an image-generation API to generate new images. This demo does not call an AI service.");
+      case "AI Image Enhancer":
+        throw new Error("Connect an AI enhancement API to process images. This demo does not call an AI service.");
+      default:
+        throw new Error("This tool is not available yet.");
+    }
+  }catch(error){
+    setStatus(error.message || "Something went wrong while processing the image.","error");
+  }finally{
+    busy=false;
+    $("runBtn").disabled=false;
+    $("runBtn").textContent="Run tool ↗";
+  }
+}
+$("runBtn").addEventListener("click",runTool);
+
+async function copyResult(){
+  if(!resultText) return;
+  try{
+    await navigator.clipboard.writeText(resultText);
+    setStatus("Text copied to clipboard.","success");
+  }catch{
+    const ta=document.createElement("textarea");
+    ta.value=resultText;document.body.appendChild(ta);ta.select();
+    document.execCommand("copy");ta.remove();
+    setStatus("Text copied.","success");
+  }
+}
+
+renderTools();
+</script>
+</body>
+</html>

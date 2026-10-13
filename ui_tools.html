@@ -1,0 +1,723 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b14">
+<title>UI Design Tools — Design & UI Tools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#080b14;--panel:#101626;--card:#111a2d;
+  --card-hover:#17233b;--text:#f4f6ff;--muted:#94a3bd;
+  --accent:#8b5cf6;--cyan:#22d3ee;
+  --border:rgba(148,163,184,.13);
+  --gradient:linear-gradient(135deg,#8b5cf6,#22d3ee);
+  --radius:20px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;color:var(--text);
+  background:
+    radial-gradient(ellipse at 15% 0%,rgba(91,33,182,.17),transparent 36%),
+    radial-gradient(ellipse at 90% 15%,rgba(8,145,178,.10),transparent 30%),
+    var(--bg);
+  font-family:Inter,system-ui,sans-serif;
+}
+button,input,textarea,select{font:inherit}
+button{color:inherit}
+button:focus-visible,input:focus-visible,textarea:focus-visible,
+select:focus-visible,.tool:focus-visible{
+  outline:2px solid var(--cyan);outline-offset:3px
+}
+.topbar{
+  height:76px;padding:0 6%;display:flex;align-items:center;
+  justify-content:space-between;border-bottom:1px solid var(--border);
+  background:rgba(8,11,20,.75);backdrop-filter:blur(18px);
+  position:sticky;top:0;z-index:10
+}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:-.5px}
+.brand-icon{
+  width:40px;height:40px;border-radius:13px;display:grid;place-items:center;
+  background:var(--gradient);font-size:21px;box-shadow:0 0 25px #8b5cf633
+}
+.brand-name{font-size:17px}
+.brand-name span{color:#a78bfa}
+.top-label{
+  font-size:11px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);border:1px solid var(--border);padding:9px 13px;border-radius:30px
+}
+.hero{text-align:center;padding:76px 20px 38px;max-width:850px;margin:auto}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 13px;
+  border:1px solid #8b5cf647;border-radius:30px;color:#c4b5fd;
+  background:#8b5cf614;font-size:11px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase
+}
+.eyebrow-dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
+h1{margin:23px 0 15px;font-size:clamp(36px,6vw,64px);line-height:1.08;letter-spacing:-2.8px;font-weight:800}
+.gradient-text{
+  background:linear-gradient(100deg,#a78bfa 15%,#67e8f9 90%);
+  -webkit-background-clip:text;background-clip:text;color:transparent
+}
+.hero p{max-width:600px;margin:0 auto;color:var(--muted);font-size:15px;line-height:1.8}
+.search-wrap{max-width:570px;margin:30px auto 0;position:relative}
+.search-icon{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:#8795b1;font-size:19px}
+#search{
+  width:100%;height:56px;padding:0 20px 0 49px;background:#111a2de8;
+  border:1px solid var(--border);border-radius:15px;color:var(--text);outline:none;transition:.2s
+}
+#search:focus{border-color:#8b5cf6;box-shadow:0 0 0 4px #8b5cf61c}
+.stats{display:flex;justify-content:center;gap:30px;margin-top:24px;flex-wrap:wrap}
+.stat{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:12px}
+.stat strong{color:#e2e8f0;font-weight:600}
+.stat-icon{color:var(--cyan)}
+.workspace{max-width:1300px;margin:auto;padding:28px 5% 80px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:22px}
+.section-title{font-size:19px;font-weight:700;letter-spacing:-.5px}
+.section-subtitle{font-size:12px;color:var(--muted);margin-top:6px}
+.tool-count{font-size:12px;color:var(--muted)}
+.filters{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:25px}
+.filter{
+  border:1px solid var(--border);background:#111a2db3;color:var(--muted);
+  padding:9px 15px;border-radius:30px;cursor:pointer;font-size:12px;font-weight:600;transition:.2s
+}
+.filter:hover{color:var(--text);border-color:#8b5cf6}
+.filter.active{color:#fff;background:linear-gradient(120deg,#7c3aed,#6d5ce8);border-color:transparent;box-shadow:0 5px 18px #7c3aed30}
+.tools{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:17px}
+.tool{
+  min-width:0;position:relative;overflow:hidden;padding:22px;
+  border:1px solid var(--border);border-radius:var(--radius);
+  background:linear-gradient(145deg,rgba(20,30,51,.96),rgba(13,20,35,.96));
+  cursor:pointer;transition:transform .25s,border-color .25s,box-shadow .25s
+}
+.tool:before{
+  content:"";position:absolute;top:0;left:15%;right:15%;height:1px;
+  background:linear-gradient(90deg,transparent,#a78bfa,transparent);opacity:0;transition:.25s
+}
+.tool:hover{transform:translateY(-5px);border-color:#8b5cf68c;box-shadow:0 18px 40px #0003,0 0 28px #8b5cf60b;background:var(--card-hover)}
+.tool:hover:before{opacity:1}
+.tool-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.tool-icon{
+  width:46px;height:46px;border-radius:14px;display:grid;place-items:center;
+  background:linear-gradient(140deg,#8b5cf631,#22d3ee17);
+  border:1px solid #a78bfa26;font-size:22px
+}
+.tool-arrow{color:#60708e;font-size:18px;transition:.2s}
+.tool:hover .tool-arrow{color:#c4b5fd;transform:translate(2px,-2px)}
+.tool h3{font-size:14px;line-height:1.5;margin:19px 0 8px;font-weight:700}
+.tool p{font-size:12px;line-height:1.7;color:var(--muted);margin:0;min-height:40px}
+.tool-footer{margin-top:17px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tag{font-size:10px;color:#a5b4fc;background:#818cf81a;border:1px solid #818cf826;border-radius:6px;padding:5px 7px}
+.tool-link{font-size:11px;color:#c4b5fd;font-weight:600}
+.empty-state{display:none;text-align:center;padding:60px 20px;color:var(--muted)}
+.empty-state strong{display:block;color:var(--text);font-size:17px;margin-bottom:8px}
+footer{border-top:1px solid var(--border);padding:25px;text-align:center;color:#64748b;font-size:11px}
+
+/* Modal */
+.modal{
+  position:fixed;inset:0;z-index:30;display:none;align-items:center;
+  justify-content:center;padding:18px;background:#03060fd1;backdrop-filter:blur(12px)
+}
+.modal.open{display:flex}
+.modal-content{
+  width:min(100%,950px);max-height:92vh;overflow:auto;
+  border:1px solid #94a3bd30;border-radius:24px;
+  background:linear-gradient(145deg,#131c30,#0d1423);box-shadow:0 30px 100px #0008
+}
+.modal-header{
+  position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;
+  gap:15px;padding:20px 24px;border-bottom:1px solid var(--border);
+  background:#101626f5;backdrop-filter:blur(12px)
+}
+.modal-title-wrap{display:flex;align-items:center;gap:13px}
+.modal-icon{
+  width:43px;height:43px;display:grid;place-items:center;border-radius:13px;
+  background:linear-gradient(135deg,#8b5cf6,#2563eb);font-size:21px
+}
+.modal-header h2{font-size:17px;margin:0}
+.modal-header p{font-size:11px;color:var(--muted);margin:5px 0 0}
+.close{border:1px solid var(--border);background:#ffffff08;color:#aab6cc;width:38px;height:38px;border-radius:12px;cursor:pointer;font-size:18px}
+.close:hover{color:#fff;background:#ffffff12}
+.editor-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;padding:24px}
+.editor-left,.editor-right{min-width:0}
+.panel-label{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#d8def0;font-size:12px;font-weight:700;margin-bottom:12px}
+.field{min-width:0;margin-bottom:14px}
+.field label{display:block;font-size:11px;color:#b6c3d9;margin-bottom:7px}
+.field input,.field select,.field textarea{
+  width:100%;min-width:0;border:1px solid var(--border);border-radius:10px;
+  background:#0b1220;color:var(--text);padding:11px 12px;outline:none;font-size:12px
+}
+.field textarea{resize:vertical;min-height:85px;line-height:1.6}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#8b5cf6}
+.field input[type="color"]{height:42px;padding:4px;cursor:pointer}
+.field input[type="range"]{padding:0;accent-color:#8b5cf6}
+.field input[type="checkbox"]{width:auto;accent-color:#8b5cf6}
+.field-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.hint{font-size:10px;color:#71809c;line-height:1.7;margin-top:7px}
+.primary-btn,.secondary-btn{
+  border:0;border-radius:11px;padding:12px 17px;font-size:12px;font-weight:700;cursor:pointer;transition:.2s
+}
+.primary-btn{background:linear-gradient(120deg,#8b5cf6,#6366f1);box-shadow:0 6px 20px #8b5cf629}
+.secondary-btn{background:#ffffff0a;border:1px solid var(--border);color:#d6def0}
+.primary-btn:hover,.secondary-btn:hover{transform:translateY(-1px)}
+.run-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.run-row button{flex:1}
+.preview-box{
+  min-height:270px;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:12px;text-align:center;padding:20px;
+  border:1px solid var(--border);border-radius:16px;
+  background-color:#0a1020;
+  background-image:linear-gradient(45deg,#ffffff06 25%,transparent 25%),linear-gradient(-45deg,#ffffff06 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#ffffff06 75%),linear-gradient(-45deg,transparent 75%,#ffffff06 75%);
+  background-size:20px 20px;background-position:0 0,0 10px,10px -10px,-10px 0
+}
+#previewContent{width:100%;min-width:0}
+#previewContent canvas{max-width:100%;height:auto;display:block;margin:auto;border-radius:6px}
+.placeholder{color:#71809c;font-size:12px;line-height:1.7}
+.placeholder span{display:block;font-size:30px;margin-bottom:8px}
+.result-code{
+  padding:15px;border:1px solid var(--border);border-radius:13px;
+  background:#080d19;color:#dbe5f6;white-space:pre-wrap;overflow-wrap:anywhere;
+  font:12px/1.8 ui-monospace,SFMono-Regular,Consolas,monospace;max-height:300px;overflow:auto
+}
+.result-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.result-actions button{flex:1}
+.status{font-size:11px;line-height:1.6;color:var(--muted);margin-top:10px;min-height:16px}
+.status.error{color:#fca5a5}
+.status.success{color:#86efac}
+.disclaimer{font-size:10px;color:#71809c;line-height:1.7;margin-top:14px}
+.swatches{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+.swatch{min-width:0;border:1px solid #ffffff18;border-radius:12px;overflow:hidden;background:#0a1020}
+.swatch-color{height:92px;cursor:pointer}
+.swatch-code{font-size:10px;text-align:center;padding:9px 2px;color:#dbe5f6;cursor:pointer}
+.palette-preview{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.palette-preview div{height:40px;border-radius:6px}
+.font-preview{padding:20px;border:1px solid var(--border);border-radius:14px;background:#0b1220}
+.font-preview h3{font-family:"Playfair Display",serif;font-size:30px;margin:0 0 12px}
+.font-preview p{color:#b8c4da;font-size:13px;line-height:1.8;margin:0}
+.button-preview{padding:28px;text-align:center;border-radius:13px;background:#0b1220;border:1px solid var(--border)}
+.grid-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.grid-preview div{aspect-ratio:1;display:grid;place-items:center;text-align:center;font-weight:800;font-size:clamp(10px,2vw,18px);padding:5px;overflow:hidden}
+@media(max-width:1050px){.tools{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:720px){
+  .topbar{height:65px;padding:0 5%}.top-label{display:none}
+  .hero{padding:55px 20px 30px}h1{letter-spacing:-1.7px}
+  .workspace{padding:22px 5% 55px}
+  .tools{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .tool{padding:16px;border-radius:16px}.tool-icon{width:40px;height:40px;font-size:19px}
+  .tool h3{font-size:13px;margin-top:15px}.tool p{font-size:11px}
+  .editor-grid{grid-template-columns:1fr;padding:18px}
+  .modal{padding:9px}.modal-content{max-height:96vh;border-radius:18px}
+  .modal-header{padding:15px 17px}.stats{gap:14px}
+}
+@media(max-width:390px){
+  .tools{grid-template-columns:1fr}.tool p{min-height:0}
+  .field-row{grid-template-columns:1fr}.swatches{gap:5px}.swatch-color{height:65px}
+}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="brand">
+    <div class="brand-icon">✦</div>
+    <div class="brand-name">UI Design<span>Tools</span></div>
+  </div>
+  <div class="top-label">✦ Creative Toolkit</div>
+</nav>
+
+<header class="hero">
+  <div class="eyebrow"><span class="eyebrow-dot"></span> Design workspace</div>
+  <h1>Make ideas look<br><span class="gradient-text">extraordinary.</span></h1>
+  <p>Create color systems, CSS components, brand concepts and social layouts in one streamlined design workspace.</p>
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input type="search" id="search" placeholder="Search design tools..." autocomplete="off" aria-label="Search design tools">
+  </div>
+  <div class="stats">
+    <div class="stat"><span class="stat-icon">✦</span><strong>10 tools</strong></div>
+    <div class="stat"><span class="stat-icon">◇</span>Live previews</div>
+    <div class="stat"><span class="stat-icon">↗</span>Copy-ready code</div>
+  </div>
+</header>
+
+<main class="workspace">
+  <div class="section-head">
+    <div>
+      <div class="section-title">Explore design tools</div>
+      <div class="section-subtitle">Your creative workflow, all in one place.</div>
+    </div>
+    <div class="tool-count" id="toolCount">10 tools</div>
+  </div>
+  <div class="filters" id="filters">
+    <button class="filter active" data-category="All">All tools</button>
+    <button class="filter" data-category="Color">Color</button>
+    <button class="filter" data-category="CSS">CSS & UI</button>
+    <button class="filter" data-category="Branding">Branding</button>
+    <button class="filter" data-category="Social">Social design</button>
+    <button class="filter" data-category="Layout">Layouts</button>
+  </div>
+  <section class="tools" id="tools" aria-label="Design tools"></section>
+  <div class="empty-state" id="emptyState">
+    <strong>No matching tools found</strong>
+    Try another search or choose a different category.
+  </div>
+</main>
+
+<footer>UI Design Tools · Tools for a more thoughtful creative workflow</footer>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <div class="modal-icon" id="modalIcon">✦</div>
+        <div>
+          <h2 id="modalTitle">Design tool</h2>
+          <p id="modalDescription">Customize your design.</p>
+        </div>
+      </div>
+      <button class="close" id="closeBtn" aria-label="Close tool">✕</button>
+    </div>
+    <div class="editor-grid">
+      <section class="editor-left">
+        <div class="panel-label"><span>01 / Customize</span><span class="tool-count">Your settings</span></div>
+        <div id="controls"></div>
+        <div class="run-row">
+          <button class="primary-btn" id="runBtn">Generate preview ↗</button>
+          <button class="secondary-btn" id="resetBtn">Reset</button>
+        </div>
+        <div class="status" id="status" role="status" aria-live="polite"></div>
+      </section>
+      <section class="editor-right">
+        <div class="panel-label"><span>02 / Live result</span><span class="tool-count">Preview</span></div>
+        <div class="preview-box">
+          <div id="previewContent">
+            <div class="placeholder"><span>✧</span>Your design preview will appear here.</div>
+          </div>
+        </div>
+        <div class="result-actions">
+          <button class="secondary-btn" id="copyBtn">Copy CSS / SVG</button>
+          <button class="secondary-btn" id="downloadBtn">Download</button>
+        </div>
+        <div class="disclaimer" id="disclaimer">Preview results are generated in your browser. Copy or download your result when ready.</div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+const toolList = [
+  {name:"Color Palette Generator",icon:"◉",category:"Color",desc:"Create harmonious palettes and copy individual color values."},
+  {name:"Gradient Generator",icon:"◒",category:"Color",desc:"Build CSS gradients with adjustable colors and direction."},
+  {name:"Font Pairing Tool",icon:"Aa",category:"Branding",desc:"Explore elegant heading and body font combinations."},
+  {name:"Button Generator (CSS)",icon:"▰",category:"CSS",desc:"Customize buttons and export reusable CSS."},
+  {name:"Box Shadow Generator",icon:"▱",category:"CSS",desc:"Fine-tune shadows with blur, spread, offset and opacity."},
+  {name:"Favicon Generator",icon:"✦",category:"Branding",desc:"Create a simple downloadable SVG favicon."},
+  {name:"Logo Generator",icon:"◇",category:"Branding",desc:"Build a simple text-based SVG logo concept."},
+  {name:"Social Media Image Resizer",icon:"▣",category:"Social",desc:"Create a social graphic in a common platform size."},
+  {name:"Instagram Grid Preview",icon:"▦",category:"Social",desc:"Preview a nine-tile Instagram-style brand grid."},
+  {name:"UI Wireframe Generator",icon:"▤",category:"Layout",desc:"Generate a simple landing-page wireframe and HTML starter."}
+];
+
+const $ = id => document.getElementById(id);
+const toolsEl = $("tools");
+const modal = $("modal");
+const controls = $("controls");
+const preview = $("previewContent");
+let currentTool = null;
+let activeCategory = "All";
+let resultCode = "";
+let downloadData = "";
+let downloadType = "text/plain";
+let lastFocused = null;
+
+const defaults = {
+  "Color Palette Generator":{base:"#8B5CF6",mode:"complementary"},
+  "Gradient Generator":{color1:"#8B5CF6",color2:"#22D3EE",angle:"135"},
+  "Font Pairing Tool":{heading:"Playfair Display",body:"Inter"},
+  "Button Generator (CSS)":{color:"#8B5CF6",textColor:"#FFFFFF",radius:"12",padding:"12",size:"14"},
+  "Box Shadow Generator":{x:"0",y:"12",blur:"28",spread:"0",opacity:"25",color:"#000000"},
+  "Favicon Generator":{letter:"D",color:"#8B5CF6",textColor:"#FFFFFF",shape:"rounded"},
+  "Logo Generator":{name:"Your Brand",tagline:"CREATIVE STUDIO",color:"#8B5CF6",textColor:"#FFFFFF",shape:"circle"},
+  "Social Media Image Resizer":{platform:"instagram",title:"YOUR NEXT BIG IDEA",subtitle:"Create something remarkable",background:"#17152F",accent:"#A78BFA"},
+  "Instagram Grid Preview":{brand:"YOUR BRAND",tagline:"CREATE • INSPIRE • REPEAT",color:"#8B5CF6",background:"#111827"},
+  "UI Wireframe Generator":{layout:"saas",brand:"Your Product",sections:"3",accent:"#8B5CF6"}
+};
+
+function renderTools(){
+  toolsEl.innerHTML = "";
+  const q = $("search").value.trim().toLowerCase();
+  const filtered = toolList.filter(t =>
+    (activeCategory === "All" || t.category === activeCategory) &&
+    (t.name+" "+t.desc+" "+t.category).toLowerCase().includes(q)
+  );
+  filtered.forEach(t=>{
+    const card=document.createElement("article");
+    card.className="tool";card.tabIndex=0;card.setAttribute("role","button");
+    card.setAttribute("aria-label","Open "+t.name);
+    const top=document.createElement("div");top.className="tool-top";
+    const icon=document.createElement("div");icon.className="tool-icon";icon.textContent=t.icon;
+    const arrow=document.createElement("span");arrow.className="tool-arrow";arrow.textContent="↗";
+    top.append(icon,arrow);
+    const title=document.createElement("h3");title.textContent=t.name;
+    const desc=document.createElement("p");desc.textContent=t.desc;
+    const footer=document.createElement("div");footer.className="tool-footer";
+    const tag=document.createElement("span");tag.className="tag";tag.textContent=t.category;
+    const link=document.createElement("span");link.className="tool-link";link.textContent="Open tool";
+    footer.append(tag,link);card.append(top,title,desc,footer);
+    card.addEventListener("click",()=>openModal(t.name));
+    card.addEventListener("keydown",e=>{
+      if(e.key==="Enter"||e.key===" "){e.preventDefault();openModal(t.name)}
+    });
+    toolsEl.appendChild(card);
+  });
+  $("toolCount").textContent=filtered.length+" "+(filtered.length===1?"tool":"tools");
+  $("emptyState").style.display=filtered.length?"none":"block";
+}
+$("search").addEventListener("input",renderTools);
+$("filters").addEventListener("click",e=>{
+  const b=e.target.closest("[data-category]");if(!b)return;
+  activeCategory=b.dataset.category;
+  document.querySelectorAll(".filter").forEach(x=>x.classList.toggle("active",x===b));
+  renderTools();
+});
+
+function addField(label,name,type,value,options={}){
+  const wrap=document.createElement("div");
+  wrap.className="field"+(options.full?" full":"");
+  const lab=document.createElement("label");
+  lab.textContent=label;lab.htmlFor="field_"+name;
+  let el;
+  if(type==="select"){
+    el=document.createElement("select");
+    options.choices.forEach(item=>{
+      const opt=document.createElement("option");
+      opt.value=item.value;opt.textContent=item.label;el.appendChild(opt);
+    });
+  }else if(type==="textarea"){
+    el=document.createElement("textarea");el.rows=options.rows||3;
+  }else{
+    el=document.createElement("input");el.type=type;
+  }
+  el.id="field_"+name;el.dataset.name=name;
+  if(value!==undefined)el.value=value;
+  if(options.min!==undefined)el.min=options.min;
+  if(options.max!==undefined)el.max=options.max;
+  if(options.step!==undefined)el.step=options.step;
+  if(options.placeholder)el.placeholder=options.placeholder;
+  wrap.append(lab,el);
+  if(options.hint){
+    const hint=document.createElement("div");hint.className="hint";hint.textContent=options.hint;wrap.appendChild(hint);
+  }
+  controls.appendChild(wrap);
+  return el;
+}
+function addRow(fields){
+  const row=document.createElement("div");row.className="field-row";
+  controls.appendChild(row);
+  const old=controls;
+  fields.forEach(f=>{
+    const wrap=document.createElement("div");wrap.className="field";
+    const lab=document.createElement("label");lab.textContent=f.label;lab.htmlFor="field_"+f.name;
+    let el;
+    if(f.type==="select"){
+      el=document.createElement("select");
+      f.choices.forEach(item=>{const o=document.createElement("option");o.value=item.value;o.textContent=item.label;el.appendChild(o)});
+    }else{el=document.createElement("input");el.type=f.type}
+    el.id="field_"+f.name;el.dataset.name=f.name;el.value=f.value;
+    if(f.min!==undefined)el.min=f.min;if(f.max!==undefined)el.max=f.max;if(f.step!==undefined)el.step=f.step;
+    wrap.append(lab,el);row.appendChild(wrap);
+  });
+}
+function value(name){
+  const el=controls.querySelector('[data-name="'+name+'"]');
+  return el?el.value:"";
+}
+function colorField(label,name,val){return addField(label,name,"color",val)}
+function setupControls(name){
+  controls.innerHTML="";
+  const d=defaults[name];
+  switch(name){
+    case "Color Palette Generator":
+      colorField("Base color","base",d.base);
+      addField("Palette harmony","mode","select",d.mode,{choices:[
+        {value:"complementary",label:"Complementary"},
+        {value:"analogous",label:"Analogous"},
+        {value:"triadic",label:"Triadic"},
+        {value:"monochromatic",label:"Monochromatic"},
+        {value:"random",label:"Random palette"}
+      ]});
+      break;
+    case "Gradient Generator":
+      addRow([{label:"First color",name:"color1",type:"color",value:d.color1},{label:"Second color",name:"color2",type:"color",value:d.color2}]);
+      addField("Gradient angle","angle","range",d.angle,{min:0,max:360,step:5,hint:"0° points upward; 90° runs left to right."});
+      break;
+    case "Font Pairing Tool":
+      addField("Heading font","heading","select",d.heading,{choices:[
+        {value:"Playfair Display",label:"Playfair Display"},
+        {value:"Inter",label:"Inter"},{value:"Georgia",label:"Georgia"},
+        {value:"Arial",label:"Arial"},{value:"Trebuchet MS",label:"Trebuchet MS"},
+        {value:"Courier New",label:"Courier New"}
+      ]});
+      addField("Body font","body","select",d.body,{choices:[
+        {value:"Inter",label:"Inter"},{value:"Arial",label:"Arial"},
+        {value:"Georgia",label:"Georgia"},{value:"Trebuchet MS",label:"Trebuchet MS"},
+        {value:"Verdana",label:"Verdana"},{value:"Courier New",label:"Courier New"}
+      ]});
+      break;
+    case "Button Generator (CSS)":
+      addRow([{label:"Button color",name:"color",type:"color",value:d.color},{label:"Text color",name:"textColor",type:"color",value:d.textColor}]);
+      addRow([{label:"Corner radius (px)",name:"radius",type:"number",value:d.radius,min:0,max:60},{label:"Padding (px)",name:"padding",type:"number",value:d.padding,min:4,max:50}]);
+      addField("Font size (px)","size","number",d.size,{min:8,max:32});
+      break;
+    case "Box Shadow Generator":
+      addRow([{label:"Horizontal offset",name:"x",type:"number",value:d.x,min:-100,max:100},{label:"Vertical offset",name:"y",type:"number",value:d.y,min:-100,max:100}]);
+      addRow([{label:"Blur (px)",name:"blur",type:"number",value:d.blur,min:0,max:150},{label:"Spread (px)",name:"spread",type:"number",value:d.spread,min:-100,max:100}]);
+      addField("Opacity (%)","opacity","range",d.opacity,{min:0,max:100});
+      colorField("Shadow color","color",d.color);
+      break;
+    case "Favicon Generator":
+      addField("Letter or symbol","letter","text",d.letter,{hint:"Use one or two characters for a clean icon."});
+      addRow([{label:"Background",name:"color",type:"color",value:d.color},{label:"Foreground",name:"textColor",type:"color",value:d.textColor}]);
+      addField("Shape","shape","select",d.shape,{choices:[{value:"rounded",label:"Rounded square"},{value:"square",label:"Square"},{value:"circle",label:"Circle"}]});
+      break;
+    case "Logo Generator":
+      addField("Brand name","name","text",d.name);
+      addField("Tagline","tagline","text",d.tagline);
+      addRow([{label:"Logo color",name:"color",type:"color",value:d.color},{label:"Text color",name:"textColor",type:"color",value:d.textColor}]);
+      addField("Icon shape","shape","select",d.shape,{choices:[{value:"circle",label:"Circle"},{value:"square",label:"Rounded square"},{value:"diamond",label:"Diamond"},{value:"none",label:"Wordmark only"}]});
+      break;
+    case "Social Media Image Resizer":
+      addField("Platform / format","platform","select",d.platform,{choices:[
+        {value:"instagram",label:"Instagram post — 1080 × 1080"},
+        {value:"portrait",label:"Instagram portrait — 1080 × 1350"},
+        {value:"story",label:"Story / Reel — 1080 × 1920"},
+        {value:"facebook",label:"Facebook cover — 1640 × 624"},
+        {value:"youtube",label:"YouTube thumbnail — 1280 × 720"},
+        {value:"linkedin",label:"LinkedIn post — 1200 × 627"},
+        {value:"x",label:"X post — 1600 × 900"}
+      ]});
+      addField("Headline","title","text",d.title);
+      addField("Subtitle","subtitle","text",d.subtitle);
+      addRow([{label:"Background",name:"background",type:"color",value:d.background},{label:"Accent",name:"accent",type:"color",value:d.accent}]);
+      break;
+    case "Instagram Grid Preview":
+      addField("Brand name","brand","text",d.brand);
+      addField("Tagline","tagline","text",d.tagline);
+      addRow([{label:"Brand color",name:"color",type:"color",value:d.color},{label:"Background",name:"background",type:"color",value:d.background}]);
+      break;
+    case "UI Wireframe Generator":
+      addField("Project / brand name","brand","text",d.brand);
+      addField("Page layout","layout","select",d.layout,{choices:[
+        {value:"saas",label:"SaaS landing page"},{value:"portfolio",label:"Portfolio"},
+        {value:"agency",label:"Agency website"},{value:"store",label:"Online store"}
+      ]});
+      addField("Number of feature cards","sections","number",d.sections,{min:2,max:6});
+      colorField("Accent color","accent",d.accent);
+      break;
+  }
+}
+function openModal(name){
+  currentTool=toolList.find(t=>t.name===name);if(!currentTool)return;
+  lastFocused=document.activeElement;
+  $("modalTitle").textContent=name;
+  $("modalDescription").textContent=currentTool.desc;
+  $("modalIcon").textContent=currentTool.icon;
+  setupControls(name);
+  preview.innerHTML='<div class="placeholder"><span>✧</span>Your design preview will appear here.</div>';
+  resultCode="";downloadData="";downloadType="text/plain";
+  setStatus("");
+  modal.classList.add("open");document.body.style.overflow="hidden";
+  $("closeBtn").focus();
+}
+function closeModal(){
+  modal.classList.remove("open");document.body.style.overflow="";
+  if(lastFocused&&lastFocused.focus)lastFocused.focus();
+}
+$("closeBtn").addEventListener("click",closeModal);
+modal.addEventListener("click",e=>{if(e.target===modal)closeModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&modal.classList.contains("open"))closeModal()});
+function setStatus(msg,type=""){
+  $("status").textContent=msg;$("status").className="status"+(type?" "+type:"");
+}
+function setPreview(html,code,download,type="text/plain"){
+  preview.innerHTML=html;resultCode=code;downloadData=download;downloadType=type;
+}
+function esc(s){
+  return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function clamp(n,min,max){return Math.min(max,Math.max(min,Number(n)||0))}
+function hexToHsl(hex){
+  let r=parseInt(hex.slice(1,3),16)/255,g=parseInt(hex.slice(3,5),16)/255,b=parseInt(hex.slice(5,7),16)/255;
+  const max=Math.max(r,g,b),min=Math.min(r,g,b);let h,s,l=(max+min)/2;
+  if(max===min)h=s=0;
+  else{
+    const d=max-min;s=l>.5?d/(2-max-min):d/(max+min);
+    switch(max){case r:h=(g-b)/d+(g<b?6:0);break;case g:h=(b-r)/d+2;break;default:h=(r-g)/d+4}
+    h*=60;
+  }
+  return [h,s*100,l*100];
+}
+function hslToHex(h,s,l){
+  h=((h%360)+360)%360;s/=100;l/=100;
+  const a=s*Math.min(l,1-l);
+  const f=n=>{
+    const k=(n+h/30)%12;
+    const c=l-a*Math.max(-1,Math.min(k-3,9-k,1));
+    return Math.round(255*c).toString(16).padStart(2,"0");
+  };
+  return "#"+f(0)+f(8)+f(4);
+}
+function makePalette(base,mode){
+  if(mode==="random")return Array.from({length:5},()=>"#"+Math.floor(Math.random()*16777215).toString(16).padStart(6,"0").toUpperCase());
+  const [h,s,l]=hexToHsl(base);
+  let hues;
+  if(mode==="complementary")hues=[h-30,h,h+25,h+180,h+210];
+  else if(mode==="analogous")hues=[h-40,h-20,h,h+20,h+40];
+  else if(mode==="triadic")hues=[h,h+120,h+240,h+120,h+240];
+  else hues=[h,h,h,h,h];
+  return hues.map((hue,i)=>hslToHex(hue,mode==="monochromatic"?s:clamp(s+(i-2)*8,25,90),mode==="monochromatic"?[25,38,50,65,80][i]:clamp(l+(i-2)*14,18,85)).toUpperCase());
+}
+function downloadFile(data,name,type){
+  const blob=data instanceof Blob?data:new Blob([data],{type});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");a.href=url;a.download=name;
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1200);
+}
+function runTool(){
+  try{
+    switch(currentTool.name){
+      case "Color Palette Generator":{
+        const colors=makePalette(value("base"),value("mode"));
+        const swatches=colors.map(c=>'<div class="swatch"><div class="swatch-color" data-color="'+c+'" style="background:'+c+'" title="Click to copy '+c+'"></div><div class="swatch-code" data-color="'+c+'">'+c+'</div></div>').join("");
+        setPreview('<div class="swatches">'+swatches+'</div><p class="hint">Click a color or its hex value to copy it.</p>',colors.join("\n"),colors.join("\n"));
+        preview.querySelectorAll("[data-color]").forEach(el=>el.addEventListener("click",()=>copyText(el.dataset.color)));
+        setStatus("Palette generated.","success");break;
+      }
+      case "Gradient Generator":{
+        const c1=value("color1"),c2=value("color2"),angle=clamp(value("angle"),0,360);
+        const css="background: linear-gradient("+angle+"deg, "+c1+", "+c2+");";
+        setPreview('<div style="height:180px;border-radius:14px;background:linear-gradient('+angle+'deg,'+c1+','+c2+')"></div><pre class="result-code">'+esc(css)+'</pre>',css,css);
+        setStatus("Gradient ready to copy.","success");break;
+      }
+      case "Font Pairing Tool":{
+        const h=value("heading"),b=value("body");
+        const code='/* Heading */\nfont-family: "'+h+'", serif;\n\n/* Body */\nfont-family: "'+b+'", sans-serif;';
+        setPreview('<div class="font-preview"><h3 style="font-family:'+JSON.stringify(h)+',serif">Design that feels different.</h3><p style="font-family:'+JSON.stringify(b)+',sans-serif">Thoughtful typography gives every interface a distinct voice. Pair a memorable heading font with a readable body font for a balanced visual system.</p></div><pre class="result-code">'+esc(code)+'</pre>',code,code);
+        setStatus("Font pairing preview generated. Some fonts may need to be loaded separately.","success");break;
+      }
+      case "Button Generator (CSS)":{
+        const c=value("color"),tc=value("textColor"),r=clamp(value("radius"),0,60),p=clamp(value("padding"),4,50),s=clamp(value("size"),8,32);
+        const css='button {\n  background: '+c+';\n  color: '+tc+';\n  padding: '+p+'px '+(p*1.7)+'px;\n  border: none;\n  border-radius: '+r+'px;\n  font-size: '+s+'px;\n  font-weight: 600;\n  cursor: pointer;\n  transition: transform .2s, opacity .2s;\n}\nbutton:hover { opacity: .9; transform: translateY(-1px); }';
+        setPreview('<div class="button-preview"><button style="background:'+c+';color:'+tc+';padding:'+p+'px '+(p*1.7)+'px;border:0;border-radius:'+r+'px;font-size:'+s+'px;font-weight:600">Click me</button></div><pre class="result-code">'+esc(css)+'</pre>',css,css);
+        setStatus("Button CSS generated.","success");break;
+      }
+      case "Box Shadow Generator":{
+        const x=clamp(value("x"),-100,100),y=clamp(value("y"),-100,100),blur=clamp(value("blur"),0,150),spread=clamp(value("spread"),-100,100),opacity=clamp(value("opacity"),0,100)/100,col=value("color");
+        const rgb=[1,3,5].map(i=>parseInt(col.slice(i,i+2),16));
+        const css="box-shadow: "+x+"px "+y+"px "+blur+"px "+spread+"px rgba("+rgb.join(", ")+", "+opacity.toFixed(2)+");";
+        setPreview('<div style="margin:35px auto;width:150px;height:110px;border-radius:18px;background:#18233a;box-shadow:'+x+'px '+y+'px '+blur+'px '+spread+'px rgba('+rgb.join(",")+','+opacity+')"></div><pre class="result-code">'+esc(css)+'</pre>',css,css);
+        setStatus("Shadow preview updated.","success");break;
+      }
+      case "Favicon Generator":{
+        const letter=(value("letter")||"D").slice(0,2),bg=value("color"),fg=value("textColor"),shape=value("shape");
+        const radius=shape==="circle"?"50%":shape==="square"?"0":"22%";
+        const svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="'+(shape==="circle"?64:shape==="square"?0:28)+'" fill="'+bg+'"/><text x="64" y="68" dominant-baseline="middle" text-anchor="middle" font-family="Arial,sans-serif" font-size="'+(letter.length>1?54:76)+'" font-weight="700" fill="'+fg+'">'+esc(letter)+'</text></svg>';
+        setPreview('<div style="width:110px;height:110px;border-radius:'+radius+';background:'+bg+';color:'+fg+';display:grid;place-items:center;font-size:'+(letter.length>1?43:58)+'px;font-weight:800;margin:auto">'+esc(letter)+'</div><p class="hint">SVG favicon concept · Scalable vector format</p>',svg,svg,"image/svg+xml");
+        setStatus("Favicon SVG generated.","success");break;
+      }
+      case "Logo Generator":{
+        const name=value("name")||"Your Brand",tag=value("tagline"),bg=value("color"),fg=value("textColor"),shape=value("shape");
+        const shapeSvg=shape==="none"?"":shape==="circle"?'<circle cx="70" cy="64" r="43" fill="'+bg+'"/>':shape==="diamond"?'<path d="M70 17 L117 64 L70 111 L23 64 Z" fill="'+bg+'"/>':'<rect x="27" y="21" width="86" height="86" rx="20" fill="'+bg+'"/>';
+        const symbol=shape==="none"?"":'<text x="70" y="78" text-anchor="middle" font-family="Arial,sans-serif" font-size="43" font-weight="700" fill="'+fg+'">'+esc(name.trim().slice(0,1).toUpperCase())+'</text>';
+        const svg='<svg xmlns="http://www.w3.org/2000/svg" width="700" height="190" viewBox="0 0 700 190">'+shapeSvg+symbol+'<text x="'+(shape==="none"?25:145)+'" y="88" font-family="Arial,sans-serif" font-size="39" font-weight="700" fill="'+fg+'">'+esc(name)+'</text><text x="'+(shape==="none"?27:147)+'" y="123" font-family="Arial,sans-serif" font-size="15" letter-spacing="3" fill="'+bg+'">'+esc(tag.toUpperCase())+'</text></svg>';
+        setPreview('<div style="padding:20px;background:#0b1220;border-radius:14px"><img alt="Logo preview" style="display:block;width:100%;height:auto" src="data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)+'"></div><p class="hint">This is a simple editable SVG concept, not a professionally designed brand identity.</p>',svg,svg,"image/svg+xml");
+        setStatus("Logo SVG generated.","success");break;
+      }
+      case "Social Media Image Resizer":{
+        const sizes={instagram:[1080,1080],portrait:[1080,1350],story:[1080,1920],facebook:[1640,624],youtube:[1280,720],linkedin:[1200,627],x:[1600,900]};
+        const [w,h]=sizes[value("platform")]||sizes.instagram;
+        const title=value("title")||"YOUR NEXT BIG IDEA",sub=value("subtitle"),bg=value("background"),accent=value("accent");
+        const scale=Math.min(1,720/w);
+        const cw=Math.round(w*scale),ch=Math.round(h*scale);
+        const c=document.createElement("canvas");c.width=cw;c.height=ch;
+        const g=c.getContext("2d");
+        g.fillStyle=bg;g.fillRect(0,0,cw,ch);
+        g.fillStyle=accent;g.fillRect(0,0,Math.max(7,cw*.018),ch);
+        g.globalAlpha=.14;g.fillStyle=accent;g.beginPath();g.arc(cw*.85,ch*.2,Math.min(cw,ch)*.35,0,Math.PI*2);g.fill();g.globalAlpha=1;
+        g.fillStyle=accent;g.fillRect(cw*.09,ch*.23,cw*.16,Math.max(3,ch*.009));
+        g.fillStyle="#ffffff";g.font="800 "+Math.max(18,Math.min(cw*.085,ch*.09))+"px Arial";g.textBaseline="top";
+        const words=title.toUpperCase().split(/\s+/);let lines=[],line="";
+        words.forEach(word=>{const test=line?line+" "+word:word;if(g.measureText(test).width>cw*.78&&line){lines.push(line);line=word}else line=test});
+        if(line)lines.push(line);
+        let yy=ch*.35;lines.slice(0,4).forEach(text=>{g.fillText(text,cw*.09,yy,cw*.8);yy+=Math.max(24,ch*.1)});
+        g.fillStyle="#d5d9e7";g.font="500 "+Math.max(12,cw*.025)+"px Arial";
+        const words2=sub.split(/\s+/);let subLine="",subLines=[];
+        words2.forEach(word=>{const test=subLine?subLine+" "+word:word;if(g.measureText(test).width>cw*.78&&subLine){subLines.push(subLine);subLine=word}else subLine=test});
+        if(subLine)subLines.push(subLine);
+        subLines.slice(0,3).forEach(t=>{g.fillText(t,cw*.09,yy,cw*.8);yy+=Math.max(17,ch*.045)});
+        g.fillStyle=accent;g.font="700 "+Math.max(10,cw*.02)+"px Arial";g.fillText("YOUR BRAND",cw*.09,ch*.88);
+        const data=c.toDataURL("image/png");
+        setPreview('<img alt="Social media graphic preview" style="width:100%;height:auto;border-radius:10px" src="'+data+'"><p class="hint">Preview shown at '+cw+' × '+ch+' pixels. Download is a PNG image; selected platform dimensions are '+w+' × '+h+'.</p>',"Social media graphic: "+w+" × "+h+" pixels",data,"image/png");
+        setStatus("Social graphic generated. Download the PNG preview.","success");break;
+      }
+      case "Instagram Grid Preview":{
+        const brand=value("brand")||"YOUR BRAND",tag=value("tagline"),color=value("color"),bg=value("background");
+        const tiles=[
+          [brand,"Brand identity"],["CREATE","Tips & ideas"],["01 / STORY","Behind the scenes"],
+          ["OUR WHY","Mission"],[brand,"Signature tile"],["NEW DROP","Product news"],
+          ["INSPIRE","Quotes"],["THE DETAILS","Process"],[tag||"FOLLOW ALONG","Community"]
+        ];
+        const html='<div class="grid-preview">'+tiles.map((t,i)=>'<div style="background:'+(i%3===1?color:bg)+';color:'+(i%3===1?"#fff":"#e9eaff")+';border:1px solid '+color+'66">'+esc(t[0])+'<small style="display:block;font-size:9px;font-weight:400;margin-top:5px">'+esc(t[1])+'</small></div>').join("")+'</div><p class="hint">Concept preview only. This does not publish to Instagram or use your real posts.</p>';
+        setPreview(html,tiles.map(t=>t.join(" — ")).join("\n"),"Instagram-grid-plan.txt");
+        setStatus("Nine-tile grid concept generated.","success");break;
+      }
+      case "UI Wireframe Generator":{
+        const brand=value("brand")||"Your Product",layout=value("layout"),n=clamp(value("sections"),2,6),accent=value("accent");
+        const layoutNames={saas:"SaaS landing page",portfolio:"Creative portfolio",agency:"Agency website",store:"Online store"};
+        const featureNames={saas:["Fast setup","Smart workflow","Built to scale"],portfolio:["Selected work","About the artist","Creative process"],agency:["Our services","Recent projects","Client stories"],store:["Featured collection","Best sellers","Customer favorites"]}[layout];
+        const cards=Array.from({length:n},(_,i)=>'<div style="border:1px solid #334155;border-radius:9px;padding:12px;background:#101a2d"><div style="height:35px;width:35px;border-radius:8px;background:'+accent+'33;margin-bottom:10px"></div><strong style="font-size:11px">'+esc(featureNames[i%featureNames.length])+'</strong><div style="height:5px;width:85%;background:#334155;border-radius:4px;margin-top:10px"></div><div style="height:5px;width:60%;background:#26364e;border-radius:4px;margin-top:6px"></div></div>').join("");
+        const html='<div style="background:#0b1220;border:1px solid #334155;border-radius:12px;padding:16px"><div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #26364e;padding-bottom:14px;gap:10px"><strong style="font-size:12px">'+esc(brand)+'</strong><span style="font-size:9px;color:#94a3b8">ABOUT &nbsp; FEATURES &nbsp; CONTACT</span></div><div style="padding:24px 3px;text-align:left"><div style="font-size:9px;letter-spacing:2px;color:'+accent+'">'+layoutNames[layout].toUpperCase()+'</div><h3 style="font-size:clamp(20px,3vw,30px);margin:12px 0">A better way to bring your ideas to life.</h3><p style="font-size:11px;color:#94a3b8;line-height:1.7">A clean, focused starting point for your next project.</p><span style="display:inline-block;background:'+accent+';padding:9px 13px;border-radius:7px;font-size:10px;font-weight:700">Get started →</span></div><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px">'+cards+'</div></div>';
+        const htmlCode='<!-- '+layoutNames[layout]+' wireframe starter -->\n<section class="hero">\n  <nav>'+esc(brand)+' | About | Features | Contact</nav>\n  <h1>A better way to bring your ideas to life.</h1>\n  <p>A clean, focused starting point for your next project.</p>\n  <a href="#features" class="button">Get started</a>\n</section>\n<section id="features" class="features">\n'+Array.from({length:n},(_,i)=>'  <article class="feature"><h2>'+featureNames[i%featureNames.length]+'</h2><p>Describe this feature or benefit.</p></article>').join("\n")+'\n</section>\n<style>\n:root { --accent: '+accent+'; }\n.features { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; }\n.button { background:var(--accent); color:white; padding:.75rem 1rem; border-radius:.5rem; }\n</style>';
+        setPreview(html,htmlCode,htmlCode);
+        setStatus("Wireframe preview and HTML/CSS starter generated.","success");break;
+      }
+    }
+  }catch(err){setStatus(err.message||"Could not generate this design.","error")}
+}
+$("runBtn").addEventListener("click",runTool);
+$("resetBtn").addEventListener("click",()=>{
+  if(!currentTool)return;
+  setupControls(currentTool.name);preview.innerHTML='<div class="placeholder"><span>✧</span>Your design preview will appear here.</div>';
+  resultCode="";downloadData="";setStatus("Settings reset.");
+});
+async function copyText(text){
+  try{await navigator.clipboard.writeText(text);setStatus("Copied to clipboard.","success")}
+  catch{
+    const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();
+    const ok=document.execCommand("copy");ta.remove();setStatus(ok?"Copied to clipboard.":"Copy was blocked by your browser.",ok?"success":"error");
+  }
+}
+$("copyBtn").addEventListener("click",()=>{
+  if(!resultCode){setStatus("Generate a result first.","error");return}
+  copyText(resultCode);
+});
+$("downloadBtn").addEventListener("click",()=>{
+  if(!downloadData){setStatus("Generate a result first.","error");return}
+  if(currentTool.name==="Social Media Image Resizer"){
+    const a=document.createElement("a");a.href=downloadData;a.download="social-graphic.png";a.click();
+  }else{
+    const filename=currentTool.name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+    const ext=downloadType==="image/svg+xml"?"svg":downloadType==="image/png"?"png":"txt";
+    downloadFile(downloadData,filename+"."+ext,downloadType);
+  }
+  setStatus("Download started.","success");
+});
+
+renderTools();
+</script>
+</body>
+</html>
